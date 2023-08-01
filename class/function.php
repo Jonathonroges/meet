@@ -14,6 +14,8 @@
 			<span id="status" ></span>
 			Nome:<br>
 			<input type="text" id="userName" name="userName"><br>
+			Data Nascimento:<br>
+			<input type="text" id="userBirthday" name="usereBirthday"><br>
 			Telefone:<br>
 			<input type="text" id="userPhone" name="userPhone"><br>
 			Bio:<br>
