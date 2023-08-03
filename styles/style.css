@@ -1,0 +1,218 @@
+body{
+	margin: 0;
+	padding: 0;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif, 'Times New Roman', Times, serif;
+}
+
+/*Para telas que tenham até no maximo 601px, vai de 0px até 601 */
+@media only screen and (max-width:601px){
+	.main{
+		background-color: #FFFFFF;
+		width: 100%;
+	}
+	.box-cad-user{
+		    background-color: #FFFFFF;
+		    height: 100%;
+		    border: 1px solid #FFFFFF;
+			display: flex;
+			flex-direction: column;
+		    justify-content: center;
+		    align-items: center;
+		
+		}
+	
+	.container-user{
+		border: 1px solid #FFFFFF;
+		background-color: #FFFFFF;
+		width: 90%;
+	}
+	
+	.carregar-foto{
+		border: 0px;
+		background-color: #000000;
+		color: #FFFFFF;
+		background-image: url("../images/layout/photo-icon-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		
+	}
+	
+	#userName{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url("../images/layout/smile-icon-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		outline: none;
+	}
+	#userPassword{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url( "../images/layout/password-icon-01.png" );
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		outline: none;
+	}
+	
+	#userBirthday{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url("../images/layout/birthday-icon-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		outline: none;
+	}
+	#userSexo{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url("../images/layout/sexo-icon-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		outline: none;
+		width: 150px;
+	}
+	#userPhone{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url("../images/layout/phone-icon-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		outline: none;
+	}
+	#userEmail{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url("../images/layout/email-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 25px;/*Afasta um pouco o texto*/
+		outline: none;
+	}
+	#userBio{
+		border: 0px;
+		background-color: #E7E7E7;
+		background-image: url("../images/layout/bio-icon-01.png");
+		background-repeat: no-repeat;
+		background-position: 8px 8px;
+		padding: 12px;
+		text-indent: 20px;/*Afasta um pouco o texto*/
+		outline: none;
+	}
+	
+	#bt-enviar-cad-user{
+		padding: 8px;
+		background-color: steelblue;
+		color: #FFFFFF;
+		width: 100px;
+		border: none;
+	}
+	
+	
+	.box-cad-user input{
+		width: 100%;
+	}
+
+	.box-info-center{
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		font-size: 18px;
+	}
+	
+	.box-geral-profile{
+		display: flex;
+		flex-direction: row;
+		padding: 16px;
+		height: 150px;
+		/*border: 1px solid #66B7B3;*/
+	}
+	.box-info-tex-profile{
+		display: block;
+		justify-content: center;
+		align-items: center;
+		float: left;
+		width: 200px;
+	  /*border: 1px solid #e60707;*/
+	}
+
+	.text-info-name{
+		font-size: 18px;
+		font-weight: bold;
+	}
+	.text-info-bio{
+		
+		color: #aaaaaa;
+		font-size: 12px;
+		/*border: 1px solid #e60707;*/
+		background-color: #FFFFFF;
+		z-index: 3;
+	}
+
+    .box-moldura-profile{
+		display: block;
+		margin-left: auto;
+		left: 10px;
+		width: 97px;
+		height: 97px;
+	    /*border: 1px solid #e6ad11;*/
+		background-repeat: no-repeat;
+		background-position: 1px 1px;
+		background-size: 95px;
+		z-index: 1;
+
+	}
+
+    
+	/*desenha a moldura redonda com img png*/
+	.moldura-round-profile{
+		display: block;
+		width: 100px;
+		height: 100px;
+		background-image: url("../images/layout/moldure-profile-media-01.png");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 100px 100px;
+		z-index: 2;
+	}
+
+	.box-action-profile{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		align-content: center;
+		/*border: 1px solid #086c85;*/
+	}
+	.box-bt{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		padding: 8px;
+		width: 30%;
+		background-color: #FFFFFF;
+		border: 1px solid #aaaaaa;
+	}
+
+
+}
+/*Para telas com até o mínimo 600pixel, inicia com 600px até infinito */
+@media only screen and (min-width:601px){
+	.main{
+		background-color: #66B7B3;
+	}
+}
+
