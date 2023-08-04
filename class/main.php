@@ -20,10 +20,10 @@
 		 <div class="main">
 			 <?php
 			 
-			    if(isset($_POST["opc"])){
+			    if(isset($_GET["page"])){
 					
-
-							if($_POST["opc"] == "gravar"){
+                            
+							if($_GET["page"] == "cadUser"){
 								
 									$sql = "INSERT INTO user (       
 									user_name    ,
@@ -50,19 +50,49 @@
 												<span> 
 												Dados Gravados com sucesso!
 												</span>
-										</div>	 
-											
-											";
-							}
-							if($_POST["opc"] == "logar"){
+										</div>";
+
+
+							}if($_GET["page"] == "updateuser"){
+								
+								if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+	                            session_start(); 
+								$sql = "UPDATE  user SET user_photo_perfil = '".$_POST['arquivo']."',
+								                         user_name = '".$_POST['userName']."',
+                                                         user_password =  '".$_POST['userPassword']."',
+														 user_birthday =  '".setFormatAmericanDate(   trim($_POST['usereBirthday'] )  )."',
+														 user_sexo     =  '".$_POST['userSexo']."',
+														 user_phone    =  '".$_POST['userPhone']."',
+														 user_email    =  '".$_POST['userEmail']."',
+														 user_bio      =  '".$_POST['userBio']."'
+								                         WHERE user_id = ".$_SESSION['user_id']."";
+								$query = $mysqli->query($sql);
+								print "<div class='box-info-center'>
+								          <span> 
+								            Dados alterados com sucesso!
+								          </span>
+						              </div>";
 							
+							}if($_GET["page"] == "userLogin"){
+								
 								areaUser();
 							}
+							if($_GET["page"] == "alteruser"){
+								
+								alterUser();
+
+							}if($_GET["page"] == "newcaduser"){
+								
+								formCadUser();
+							}
+
+							
+							
 					
 
 				}else{
 					
-					//CadUser();//chama user();
+                   //CadUser();//chama user();
                     windowLoginUser();
 
 				}
