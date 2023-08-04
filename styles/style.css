@@ -213,6 +213,33 @@ body{
 		color: #000000;
 	}
 
+	.box-new-post{
+		display: flex;
+		flex-direction: column;
+		padding: 16px;
+	}
+
+	/*Estilizando lista de postagens do usuario - tela profile*/
+	.box-post-list{
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		
+	}
+	.box-iten-post{
+		display: flex;
+		
+		flex-grow: 1;
+		height: 120px;
+		width: 120px;
+		/*border: 1px solid #E7E7E7;*/
+		background-position: center;
+		background-repeat: no-repeat;
+		
+	}
+
 
 }
 /*Para telas com até o mínimo 600pixel, inicia com 600px até infinito */

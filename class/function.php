@@ -96,6 +96,8 @@ function windowLoginUser(){
 
 function areaUser(){
 
+	if (!isset($_SESSION))
+	session_start(); 
 	$mysqli = conectar();
 	
 	$sql = "SELECT * FROM user 
@@ -108,8 +110,7 @@ function areaUser(){
 	//print "->".$_POST["userEmail"]." - ".$_POST["userPassword"]."numRows = ".$numRows ."";
 	while (    $dados = $query->fetch_assoc()  ) {
 				  //print "usuario encontrado '".$dados["user_name"]."";
-				  if (!isset($_SESSION))
-				  session_start(); 
+				 
 				  $_SESSION['user_id'] = $dados["user_id"] ;
                    ?>
                   <div class='box-geral-profile'>
@@ -130,15 +131,31 @@ function areaUser(){
 					   <a href="main.php?page=alteruser&id=<?php print $_SESSION['user_id'];?>" class="box-bt">
 						  <span>editar perfil</span>
 					  </a>
-					  <a href="#" class="box-bt">
+					  <a href="main.php?page=newpost" class="box-bt">
 						 <span>publicar</span>
 	                  </a>
 	             </div>
                   
-
-
-				  <?php
-                  
+             <?php
+              
+		//Listando postagens
+		
+		$sql = "SELECT * FROM user_new_post 
+		                 WHERE user_new_post_user_id = ".$_SESSION['user_id']."   ";
+                
+				$query = $mysqli->query($sql);
+				$numRows =  $query->num_rows;//número de linhas
+				
+				print "<div class='box-post-list'>";
+						while (    $dados = $query->fetch_assoc()  ) {
+						
+                              ?>
+							        <div class="box-iten-post" 
+							             style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>')">
+							        </div>
+                             <?php
+						}
+				print "</div>";
 
 
 
@@ -214,9 +231,16 @@ function alterUser(){
 				 <input type="text" id="userBirthday" name="usereBirthday" value="<?php print setFormatBrazilianDate_($dados["user_birthday"]); ?>" ><br>
 				 <br> 
 				 <select name="userSexo" id="userSexo">
-				   <option  selected><?php print $dados["user_sexo"]; ?></option>
-				   <option value="male">masculino</option>
-				   <option value="female" selected>feminino</option>
+				   <?php 
+				                           if($dados["user_sexo"] == "male"){
+                                             print "<option  selected value='male'>masculino</option>";
+										   }else{
+											 print "<option  selected value='female'>feminino</option>";
+										   }
+				                            
+									 ?>
+				   <option value="male" >masculino</option>
+				   <option value="female" >feminino</option>
 				 </select><br>
 				 <br>
 				 <input type="text" id="userPhone" name="userPhone" value="<?php print $dados["user_phone"]; ?>" ><br>
@@ -244,6 +268,31 @@ function alterUser(){
 
           
 	}
+}
+
+function newPost(){
+	
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+	    session_start(); 
+
+      ?>
+
+	  <div class="box-new-post">
+	        <b>Novo Publicação</b> <br>
+			<form action="main.php?page=setnewpostuser" method="POST">
+					<div class='files'></div>
+					<div id='upload' class='carregar-foto' >carregar imagem</div>
+								<span id="status" ></span>
+								<textarea  id="new-post-text" name="new-post-text"
+								rows="5" cols="33"  maxlength ="150">Descrição da postagem
+								</textarea><br>
+								<br><br>
+					<input type="submit" value="postar" name="opc" id="bt-enviar-cad-user" >
+			</form>
+    </div>				 
+	  <?php
+
 }
 
 

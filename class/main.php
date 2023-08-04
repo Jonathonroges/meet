@@ -73,6 +73,34 @@
 								          </span>
 						              </div>";
 							
+							}if($_GET["page"] == "setnewpostuser"){
+								
+										if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+										session_start(); 
+										
+										$sql = "INSERT INTO user_new_post (       
+											user_new_post_user_id    ,
+											user_new_post_image,
+											user_new_post_description,
+											user_new_post_date    ,
+											user_new_post_arquivar   
+											)
+											values(
+											".$_SESSION['user_id'].",
+											'".$_POST['arquivo']."'  ,
+											'".$_POST['new-post-text']."',
+											now(),
+											'no' )"; 
+										
+										$query = $mysqli->query($sql);
+										
+										
+										print "<div class='box-info-center'>
+												<span> 
+													Publicaçâo efetuada!
+												</span>
+											</div>";
+
 							}if($_GET["page"] == "userLogin"){
 								
 								areaUser();
@@ -85,6 +113,11 @@
 								
 								formCadUser();
 							}
+							if($_GET["page"] == "newpost"){
+								
+								newPost();
+							}
+							
 
 							
 							
