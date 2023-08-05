@@ -116,7 +116,17 @@
 							if($_GET["page"] == "newpost"){
 								
 								newPost();
+							}if($_GET["page"] =="openuserpost"){
+								
+								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+								session_start(); 
+								openUserPost( $_SESSION['user_id'], $_GET["post_id"] );//Metodo dentro de function.php
+							
+							}if($_GET["page"] =="feeds"){
+								
+								feeds();
 							}
+							
 							
 
 							

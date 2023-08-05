@@ -7,10 +7,14 @@ body{
 }
 
 /*Para telas que tenham até no maximo 601px, vai de 0px até 601 */
-@media only screen and (max-width:601px){
+/*@media only screen and (max-width:601px){*/
 	.main{
+		display: block;
 		background-color: #FFFFFF;
-		width: 100%;
+		/*width: 100%;*/
+		max-width: 500px;/*Redimenciona ate, no máximo 500px de largura*/
+		border: 1px solid #E7E7E7;
+		margin: auto;
 	}
 	.box-cad-user{
 		    background-color: #FFFFFF;
@@ -240,12 +244,92 @@ body{
 		
 	}
 
+    .box-info-user-post{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	   /*border: 1px solid #aaaaaa;*/
+		padding: 8px;
 
-}
+	}
+	.profile-info-left{
+		display: flex;
+		flex-direction: row;
+	}
+	
+	.box-info-text-left-profile{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		/*border: 1px solid #f51010;*/
+		font-weight: bold;
+		font-size: 14px;
+		margin-left: 6px;
+	}
+	.post-item-info-rigth{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 5px;
+		/*border: 1px solid #f51010;*/
+		color: #aaaaaa;
+		font-size: 14px;
+		margin-left: 6px;
+	}
+
+	.box-image-user-post-item img{
+		width: 100%;
+		max-width: 500px;
+		background-repeat: no-repeat;
+	}
+
+	.user-image-profile{
+		background-repeat: no-repeat;
+		background-position: 1px 1px;
+		width: 40px;
+		height: 40px;
+	}
+	.moldura-profile-pequena{
+		display: block;
+		width: 41px;
+		height: 41px;
+		background-image: url("../images/layout/moldure-profile-pequena-01.png");
+		background-size: 41px 41px;
+		background-repeat: no-repeat;
+		background-position: center;
+		
+		z-index: 2;
+	}
+
+
+	.post-item-description{
+		display: block;
+		padding-left: 16px;
+	}
+
+	.user-iten-bt-like{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		/*border: 1px solid #aaaaaa;*/
+	}
+
+	.user-iten-bt-msg{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		/*border: 1px solid #aaaaaa;*/
+	}
+
+/*}*/
+
+
+
 /*Para telas com até o mínimo 600pixel, inicia com 600px até infinito */
+/*
 @media only screen and (min-width:601px){
 	.main{
-		background-color: #66B7B3;
+		background-color: #FFFFFF;
 	}
-}
+}*/
 

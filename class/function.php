@@ -69,6 +69,7 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
  <script type="text/javascript">
 	    $("#userBirthday").mask("99/99/9999");
 		$("#userPhone").mask("(99) 99999-9999");
+		
 </script>
 
 
@@ -80,8 +81,9 @@ function windowLoginUser(){
 	           <span> 
 	              ";
                    ?>
-                    <form action="main.php?page=userLogin" method="POST">
+                    <form action="main.php?page=userLogin" id="form-login-user" method="POST">
 						<span>EFETUAR LOGIN</span><br><br>
+						<span style='color: #ee0000;' id="result-form"></span><br>
 					   <input type="text" id="userEmail" name="userEmail" placeholder="email"><br><br>
 					   <input type="password" id="userPassword" name="userPassword" placeholder="senha" ><br>
 					   <input type="submit" value="logar" name="opc" id="bt-login-user" >
@@ -92,6 +94,46 @@ function windowLoginUser(){
            echo "			  
 			   </span>
 			</div>";
+
+           ?>
+            <script type="text/javascript">
+				/*validando formulario js*/
+				 let formLogin = document.getElementById("form-login-user");
+				 let userEmail = document.getElementById("userEmail");
+                 let userPassword = document.getElementById("userPassword");
+				 let btFormSubmit = document.getElementById("bt-login-user");
+                 let resultForm = document.getElementById("result-form");
+				 let validar = true;
+
+				 btFormSubmit.addEventListener("click", function(e){
+						e.preventDefault();//remove o comportamento de submit da página     
+						
+						 
+						if(userEmail.value == ""){
+							
+							resultForm.innerHTML = "*Digite seu email";
+							validar = false;
+							
+						 } if(userPassword.value == ""){
+							
+							resultForm.innerHTML = "*Digite a senha";
+							validar = false;
+							
+						 }
+                         //caso a variavel não seja modificada para false
+						 if(userPassword.value != "" && userPassword.value != ""){
+							validar = true;
+							formLogin.submit();//Dispara um submit no formulario 
+						 }
+						  
+							
+							
+						 
+                         
+					 });
+            </script>
+		   <?php
+
 }
 
 function areaUser(){
@@ -150,10 +192,12 @@ function areaUser(){
 						while (    $dados = $query->fetch_assoc()  ) {
 						
                               ?>
-							        <div class="box-iten-post" 
+							      <a href="main.php?page=openuserpost&post_id=<?php print $dados["user_new_post_id"]; ?>">
+								    <div class="box-iten-post" 
 							             style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>')">
 							        </div>
-                             <?php
+						          </a>
+							 <?php
 						}
 				print "</div>";
 
@@ -167,7 +211,7 @@ function areaUser(){
 		//print "Usuario ID: ".$_SESSION['user_id'];
 
 	 }else{
-		print "USUÁRIO OU SENHA NÃO ENCONTRADOS";
+		//print "USUÁRIO OU SENHA NÃO ENCONTRADOS";
 	 }
 
 
@@ -285,7 +329,7 @@ function newPost(){
 					<div id='upload' class='carregar-foto' >carregar imagem</div>
 								<span id="status" ></span>
 								<textarea  id="new-post-text" name="new-post-text"
-								rows="5" cols="33"  maxlength ="150">Descrição da postagem
+								rows="5" cols="33"  maxlength ="500">Descrição da postagem
 								</textarea><br>
 								<br><br>
 					<input type="submit" value="postar" name="opc" id="bt-enviar-cad-user" >
@@ -294,6 +338,137 @@ function newPost(){
 	  <?php
 
 }
+function openUserPost($user_id, $post_id){
+
+	
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+	    session_start(); 
+	
+	$sql = "SELECT * FROM user, user_new_post
+	                 WHERE user_new_post_id = ".$post_id."
+					 AND   user_id = ".$user_id."";
+	
+				  
+	$query = $mysqli->query($sql);
+	$numRows =  $query->num_rows;//número de linhas
+	
+	while (    $dados = $query->fetch_assoc()  ) {
+	 ?>
+	   <div class="box-user-post-item">
+		   <div class="box-image-user-post-item">
+		      <image src="../images/users/<?php print $dados["user_new_post_image"] ;?>">
+	       </div>
+		   <div class="box-info-user-post">
+			
+				<div class="profile-info-left"> 
+							<div class="user-image-profile" 
+							     style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>')"> 
+							     <div class="moldura-profile-pequena"></div>
+							</div>
+							<div class="box-info-text-left-profile">
+								<?php print $dados["user_name"] ;?>
+							</div>
+                            <!--like icon -->
+							<div class="user-iten-bt-like">
+					           <img src="../images/layout/like-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+	                        </div>
+							<div class="user-iten-bt-msg">
+					           <img src="../images/layout/msg-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+	                        </div>
+						
+				</div>	
+					
+				
+					<div class="post-item-info-rigth">
+					    <img src="../images/layout/calendario-pequeno-01.png" style="width:15px;heigth:15px;">
+						<?php print separarData($dados["user_new_post_date"]) ;?>
+					</div>
+				</div>
+
+            
+			<div class="post-item-description">
+				       <?php print $dados["user_new_post_description"];?>
+			</div><!--post-item-description-->
+
+
+       </div>
+	 
+	<?php
+    
+   }//fecha while
+     
+   
+}
+
+//PAGINA FEED
+function feeds(){
+
+	
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+	    session_start(); 
+	
+	$sql = "SELECT DISTINCT * FROM user_new_post , user
+	                          WHERE user_new_post_user_id = user_id 
+	                          ORDER BY user_new_post_id DESC LIMIT 50 ";
+	
+				  
+	$query = $mysqli->query($sql);
+	$numRows =  $query->num_rows;//número de linhas
+	
+	while (    $dados = $query->fetch_assoc()  ) {
+	 ?>
+	   <div class="box-user-post-item">
+		   
+	     <a href="main.php?page=openuserpost&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
+	      <div class="box-image-user-post-item">
+		      <image src="../images/users/<?php print $dados["user_new_post_image"] ;?>">
+	       </div>
+	     </a>
+
+		   <div class="box-info-user-post">
+			
+				<div class="profile-info-left"> 
+							<div class="user-image-profile" 
+							     style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>')"> 
+							     <div class="moldura-profile-pequena"></div>
+							</div>
+							<div class="box-info-text-left-profile">
+								<?php print $dados["user_name"] ;?>
+							</div>
+                            <!--like icon -->
+							<div class="user-iten-bt-like">
+					           <img src="../images/layout/like-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+	                        </div>
+							<div class="user-iten-bt-msg">
+					           <img src="../images/layout/msg-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+	                        </div>
+						
+				</div>	
+					
+				
+					<div class="post-item-info-rigth">
+					    <img src="../images/layout/calendario-pequeno-01.png" style="width:15px;heigth:15px;">
+						<?php print separarData($dados["user_new_post_date"]) ;?>
+					</div>
+				</div>
+
+            
+			<div class="post-item-description">
+				       <?php print $dados["user_new_post_description"];?>
+			</div><!--post-item-description-->
+
+
+       </div>
+	 
+	<?php
+    
+   }//fecha while
+     
+   
+}
+
 
 
    
@@ -366,6 +541,7 @@ function newPost(){
 			}
 	}
 
+
 	function setFormatAmericanDate($date){
 		//yyyy-mm-dd 
 		$pieces = explode("/", $date);
@@ -378,6 +554,16 @@ function newPost(){
 		return $pieces[2].'/'.$pieces[1].'/'.$pieces[0];
 	}
 
-
+function separarData($date){
+	//yyyy-mm-dd 
+	$pieces = explode(" ", $date);
+	
+	return setFormatBrazilianDate_( $pieces[0] );
+}
+function separarHora($date){
+	//yyyy-mm-dd 
+	$pieces = explode(" ", $date);
+	return $pieces[1];
+}
 
 ?>
