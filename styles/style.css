@@ -9,13 +9,65 @@ body{
 /*Para telas que tenham até no maximo 601px, vai de 0px até 601 */
 /*@media only screen and (max-width:601px){*/
 	.main{
-		display: block;
+		display: flex;
+		flex-direction: column;
 		background-color: #FFFFFF;
 		/*width: 100%;*/
 		max-width: 500px;/*Redimenciona ate, no máximo 500px de largura*/
 		border: 1px solid #E7E7E7;
 		margin: auto;
+		padding-top: 50px;/*Necessário devido os menus top e foot para não cortar os conteúdos*/
+		margin-bottom: 50px;
 	}
+
+	/*top do site*/
+	.box-top-menu{
+		position: fixed;
+		top: 0px;
+		display: flex;
+		flex-direction: row;
+		justify-content:space-between;
+		align-items: center;
+		z-index: 8;
+		width: 100%;
+		max-width: 500px;
+		height: 60px;
+		background-color: #FFFFFF;
+   }
+   .rigth-top-menu-itens{
+	display: flex;
+	/*border: 1px solid #E7E7E7;*/
+	gap: 20px;
+	padding-right: 20px;
+   }
+
+   .left-top-menu-itens{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	/*border: 1px solid #E7E7E7;*/
+	gap: 4px;
+	padding-left: 20px;
+   }
+   
+
+  /*foot do site*/
+	.box-foot-menu{
+		position: fixed;
+		bottom: 0px;
+		display: flex;
+		flex-direction: row;
+		justify-content:space-around;
+		align-items: center;
+		z-index: 8;
+		width: 100%;
+		max-width: 500px;
+		height: 60px;
+		background-color: #FFFFFF;
+
+		
+	}
+  /*fim topo do site*/
 	.box-cad-user{
 		    background-color: #FFFFFF;
 		    height: 100%;
@@ -248,6 +300,7 @@ body{
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		background-color: #FFFFFF;
 	   /*border: 1px solid #aaaaaa;*/
 		padding: 8px;
 
@@ -305,6 +358,8 @@ body{
 	.post-item-description{
 		display: block;
 		padding-left: 16px;
+		background-color: #FFFFFF;
+		padding-bottom: 12px;
 	}
 
 	.user-iten-bt-like{
@@ -320,6 +375,16 @@ body{
 		justify-content: center;
 		/*border: 1px solid #aaaaaa;*/
 	}
+
+   .feed-box-user-post-item{
+	    
+	    display: flex;
+		flex-direction: column;
+		background-color: #E7E7E7;
+		padding-bottom: 18px;
+   }
+
+
 
 /*}*/
 

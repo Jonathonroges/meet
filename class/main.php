@@ -125,6 +125,17 @@
 							}if($_GET["page"] =="feeds"){
 								
 								feeds();
+							}if($_GET["page"] =="search"){
+							  
+								print "<p>Search";
+							
+							}if($_GET["page"] =="configuration"){
+								
+								print "<p>configuration";
+
+							}if($_GET["page"] =="settings"){
+								
+								print "<p>settings";
 							}
 							
 							
@@ -140,6 +151,8 @@
 
 				}
 			    
+                topMenu();//desenha o topo    
+				footMenu();//Desenha o footMenu	
 			 ?>
 		 </div>
 	 </body>

@@ -9,6 +9,13 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
    $usuario = 'root';
    $senha = '';//sem senha - senha padrão do PhpMyAdmin
    $banco = 'meet';
+
+     //EM PRODUCAO
+	 /*
+	 $servidor = 'localhost';
+	 $usuario = '532830';
+	 $senha = '19892008';//sem senha - senha padrão do PhpMyAdmin
+	 $banco = '532830';*/
  
 	
 	// Conecta-se ao banco de dados MySQL
@@ -137,14 +144,29 @@ function windowLoginUser(){
 }
 
 function areaUser(){
+	
+	$mysqli = conectar();
+
+	
 
 	if (!isset($_SESSION))
-	session_start(); 
-	$mysqli = conectar();
-	
-	$sql = "SELECT * FROM user 
+		session_start(); 
+		
+      if(!isset($_SESSION['user_id'])){
+
+		$sql = "SELECT * FROM user 
 	                 WHERE user_email = '".trim($_POST["userEmail"])."'   
 	                 AND  user_password = '".trim($_POST["userPassword"])."'  ";
+	}else{
+		
+		
+		$sql = "SELECT * FROM user 
+	                 WHERE user_id = ".$_SESSION['user_id']."  ";
+	}
+	
+	
+	
+	
 	// 
 				  
 	$query = $mysqli->query($sql);
@@ -183,7 +205,7 @@ function areaUser(){
 		//Listando postagens
 		
 		$sql = "SELECT * FROM user_new_post 
-		                 WHERE user_new_post_user_id = ".$_SESSION['user_id']."   ";
+		                 WHERE user_new_post_user_id = ".$_SESSION['user_id']." ORDER BY user_new_post_id DESC  ";
                 
 				$query = $mysqli->query($sql);
 				$numRows =  $query->num_rows;//número de linhas
@@ -371,17 +393,17 @@ function openUserPost($user_id, $post_id){
 							</div>
                             <!--like icon -->
 							<div class="user-iten-bt-like">
-					           <img src="../images/layout/like-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+					           <img src="../images/layout/like-black-icon-01.png" style="padding-left:20px;">  
 	                        </div>
 							<div class="user-iten-bt-msg">
-					           <img src="../images/layout/msg-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+					           <img src="../images/layout/msg-black-icon-01.png" style="padding-left:20px;">  
 	                        </div>
 						
 				</div>	
 					
 				
 					<div class="post-item-info-rigth">
-					    <img src="../images/layout/calendario-pequeno-01.png" style="width:15px;heigth:15px;">
+					    <img src="../images/layout/calendario-pequeno-01.png" >
 						<?php print separarData($dados["user_new_post_date"]) ;?>
 					</div>
 				</div>
@@ -419,13 +441,13 @@ function feeds(){
 	
 	while (    $dados = $query->fetch_assoc()  ) {
 	 ?>
-	   <div class="box-user-post-item">
+	   <div class="feed-box-user-post-item">
 		   
-	     <a href="main.php?page=openuserpost&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
-	      <div class="box-image-user-post-item">
-		      <image src="../images/users/<?php print $dados["user_new_post_image"] ;?>">
-	       </div>
-	     </a>
+			<a href="main.php?page=openuserpost&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
+			<div class="box-image-user-post-item">
+				<image src="../images/users/<?php print $dados["user_new_post_image"] ;?>">
+			</div>
+			</a>
 
 		   <div class="box-info-user-post">
 			
@@ -439,17 +461,17 @@ function feeds(){
 							</div>
                             <!--like icon -->
 							<div class="user-iten-bt-like">
-					           <img src="../images/layout/like-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+					           <img src="../images/layout/like-black-icon-01.png" style="padding-left:20px;">  
 	                        </div>
 							<div class="user-iten-bt-msg">
-					           <img src="../images/layout/msg-black-icon-01.png" style="width:20px;heigth:20px;padding-left:20px;">  
+					           <img src="../images/layout/msg-black-icon-01.png" style="padding-left:20px;">  
 	                        </div>
 						
 				</div>	
 					
 				
 					<div class="post-item-info-rigth">
-					    <img src="../images/layout/calendario-pequeno-01.png" style="width:15px;heigth:15px;">
+					    <img src="../images/layout/calendario-pequeno-01.png" >
 						<?php print separarData($dados["user_new_post_date"]) ;?>
 					</div>
 				</div>
@@ -469,6 +491,70 @@ function feeds(){
    
 }
 
+function topMenu(){
+	?>
+	<div class="box-top-menu">
+
+
+	        <div class="left-top-menu-itens">
+			  <?php
+			  $mysqli = conectar();
+			  if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+				  session_start(); 
+			  
+				  $sql = "SELECT * FROM user 
+				  WHERE user_id = ".$_SESSION['user_id']." ";
+			  
+							
+			  $query = $mysqli->query($sql);
+			  $numRows =  $query->num_rows;//número de linhas
+			  
+			  while (    $dados = $query->fetch_assoc()  )
+			   {
+			  ?>
+			   	<a href="main.php?page=userLogin">
+					<div class="user-image-profile" 
+					style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>')"> 
+					<div class="moldura-profile-pequena"></div>
+					</div>
+			    </a>
+				<a href="main.php?page=feeds">	
+				   <div class="top-menu-itens"><img src="../images/layout/logo-meet-icon-01.jpg"></div> 
+			    </a>   
+            </div>
+			<?php
+			   }//fecha while
+			?>
+		   
+			<div class="rigth-top-menu-itens"> 
+				<div class="top-menu-itens"><img src="../images/layout/notification-icon-01.jpg"></div>
+			<a href="main.php?page=settings">
+				<div class="top-menu-itens"><img src="../images/layout/ajustes-icon-01.jpg"></div>
+			</a>
+			</div>
+		</div>
+	<?php
+}
+
+
+function footMenu(){
+	?>
+	<div class="box-foot-menu">
+			<a href="main.php?page=feeds">
+				<div class="foot-menu-itens"><img src="../images/layout/home-icon-01.jpg"></div>
+            </a>
+			<a href="main.php?page=search">	
+				<div class="foot-menu-itens"><img src="../images/layout/search-icon-01.jpg"></div>
+            </a>
+			<a href="main.php?page=newpost">
+				<div class="foot-menu-itens"><img src="../images/layout/newpost-icon-01.jpg"></div>
+            </a>	
+			<a href="main.php?page=configuration">
+				<div class="foot-menu-itens"><img src="../images/layout/config-icon-01.jpg"></div>
+            </a>
+    </div>
+	<?php
+}
 
 
    
