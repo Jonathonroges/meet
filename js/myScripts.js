@@ -44,16 +44,53 @@ function uploadsFile(){
 					
 					$(".files").html("<div class='post-box-arq'>"+
 					"<br>"+
-					"<img src='../images/users/media_"+file+"'> <br>"+
+					"<img src='../images/users/"+file+"' id='img-arquivo'> <br>  "+
+					
 					"<input type='hidden' id='arquivo' name='arquivo' value='"+file+"'></div>  ").addClass('success');
 					 //count++;//Incremento valor do contador para saber quantas imagens foram upadas
 				} else{
 					//alert(">>>>"+response+" <<<<<");
 					$(".files").html("<div class='post-box-arq'>"+
 					"<br>"+
-					"<img src='../images/users/media_"+file+"'> <br>"+
+					"<img src='../images/users/"+file+"' id='img-arquivo'> <br>"+
 					"<input type='hidden' id='arquivo' name='arquivo' value='"+file+"'></div>  ").addClass('success');
+
+					
+					
+
 				}
+
+
+				 /*Cropper na imagem*/
+				 const image = document.getElementById("img-arquivo");
+				 const imgOutput = document.getElementById("img-output");
+				 const files  = document.getElementById("files");
+				 const blobImage  = document.getElementById("blob-image");
+				 
+
+				 const mycropper = new Cropper(image,{
+					 aspectRatio:1,
+					 viewMode:2,
+				 });
+
+
+				 const buttonCortar = document.getElementById("button-cortar");
+				 buttonCortar.addEventListener("click",function(){
+                    
+					
+					document.getElementById("bt-enviar-cad-user").style.visibility = "visible";
+					
+					var cropperImg =  mycropper.getCroppedCanvas().toDataURL("image/png");
+                    blobImage.value = cropperImg
+                    files.innerHTML = "<img src='"+cropperImg+"' style='width:100%'>";
+					document.getElementById("button-cortar").style.visibility = "hidden";
+
+					//alert(blobImage.value);
+					
+					
+				 });
+				 
+
 			}
 		});
 		

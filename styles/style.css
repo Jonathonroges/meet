@@ -47,7 +47,7 @@ body{
 	align-items: center;
 	/*border: 1px solid #E7E7E7;*/
 	gap: 4px;
-	padding-left: 20px;
+	padding-left: 0px;
    }
    
 
@@ -245,7 +245,7 @@ body{
 		background-image: url("../images/layout/moldure-profile-media-01.png");
 		background-repeat: no-repeat;
 		background-position: center;
-		background-size: 100px 100px;
+		background-size: 300px 300px;
 		z-index: 2;
 	}
 
@@ -308,6 +308,7 @@ body{
 	.profile-info-left{
 		display: flex;
 		flex-direction: row;
+		align-items: center;
 	}
 	
 	.box-info-text-left-profile{
@@ -335,13 +336,28 @@ body{
 		max-width: 500px;
 		background-repeat: no-repeat;
 	}
+    .user-image-profile-top{
+		background-repeat: no-repeat;
+		background-position: 1px 1px;
+		width: 70px;
+		height: 70px;
+	}
+
 
 	.user-image-profile{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
-		width: 40px;
-		height: 40px;
+		width: 80px;
+		height: 80px;
 	}
+
+	.user-image-profile-feed{
+		background-repeat: no-repeat;
+		background-position: 1px 1px;
+		width: 50px;
+		height: 50px;
+	}
+
 	.moldura-profile-pequena{
 		display: block;
 		width: 41px;
@@ -366,13 +382,15 @@ body{
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		align-items: center;
 		/*border: 1px solid #aaaaaa;*/
 	}
 
-	.user-iten-bt-msg{
+	.user-iten-bt-msg{			
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		align-items: center;
 		/*border: 1px solid #aaaaaa;*/
 	}
 
@@ -383,6 +401,20 @@ body{
 		background-color: #E7E7E7;
 		padding-bottom: 18px;
    }
+   #files{
+	display: block;
+	overflow: hidden;
+	
+   }
+
+  #img-arquivo{
+	display: block;
+	overflow: hidden;
+	width: 50%;
+	
+   }
+  
+   
 
 
 

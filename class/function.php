@@ -153,13 +153,15 @@ function areaUser(){
 		session_start(); 
 		
       if(!isset($_SESSION['user_id'])){
-
+		
+		//print "->>>nao existe".$_POST["userEmail"]." <<- ";
+		
 		$sql = "SELECT * FROM user 
 	                 WHERE user_email = '".trim($_POST["userEmail"])."'   
 	                 AND  user_password = '".trim($_POST["userPassword"])."'  ";
 	}else{
 		
-		
+		//print "->>>existe".$_POST["userEmail"]." <<- ";
 		$sql = "SELECT * FROM user 
 	                 WHERE user_id = ".$_SESSION['user_id']."  ";
 	}
@@ -185,9 +187,9 @@ function areaUser(){
 							<span class="text-info-bio">  <?php print $dados["user_bio"];  ?></span>	
 						</div>
 
-						<div class="box-moldura-profile"
-								style="background-image: url('../images/users/media_<?php print $dados["user_photo_perfil"] ;?>'" >
-								<div class="moldura-round-profile"></div>
+						<div class="box-moldura-profile" >
+						        <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile"> 
+								
 						</div>
 	             </div>	
 				 
@@ -214,9 +216,10 @@ function areaUser(){
 						while (    $dados = $query->fetch_assoc()  ) {
 						
                               ?>
-							      <a href="main.php?page=openuserpost&post_id=<?php print $dados["user_new_post_id"]; ?>">
-								    <div class="box-iten-post" 
-							             style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>')">
+							      <a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>">
+								    <div>
+										 <img src="<?php print $dados["user_new_post_blob_image"] ;?>" class="box-iten-post">
+							             
 							        </div>
 						          </a>
 							 <?php
@@ -259,6 +262,10 @@ function alterUser(){
    
 		<!-- upload files-->
 	 
+         
+		<!--import para cortar imagem -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+
 	   <div class="box-cad-user">
 		   <div class="container-user">
 		<form action="main.php?page=updateuser" method="POST">
@@ -269,24 +276,29 @@ function alterUser(){
 
 				 <?php 
 						//verificando se existe imagem de usuario
-						$foto = $dados["user_photo_perfil"];
-						print "<div class='files'>";//Necessário para upload da nova imagem
-						 if(  file_exists("../images/users/media_".$foto."") ){
+						$foto = $dados["user_photo_perfil_blob"];
+						print "<div class='files' id='files'>";//Necessário para upload da nova imagem
+						 if( strlen($foto) >10 ){
 							 print " 
-										 <img src='../images/users/media_".$foto."'>
-										 <input type='hidden' name='arquivo' value='".$foto."'> 
+										 <img src='".$foto."'>
+										 <input type='hidden' name='arquivo' value='".$foto."'>
+										 <input type='hidden' id='blob-image' name='blob-image' value='".$foto."'>
 									 
 							 ";
 						 }else{
 							 print "<img src='../images/users/305639912.png'>
-							 <input type='hidden' name='arquivo' value='".$foto."'> 
+							 <input type='hidden' name='arquivo' value='".$foto."'>
+							 <input type='hidden' id='blob-image' name='blob-image' value=''> 
 							 ";
 						 }
 
 					 print "</div>"	;	
 					 ?>
-
-
+                    <input type='hidden' id='blob-image' name='blob-image' value='<?php print $foto;?> '>
+				 <br>
+				    <br>após recarrecar nova foto, clique em cortar<br> 
+                    <input type="button" value="cortar" id="button-cortar">
+				 <br>
 				 <div id='upload' class='carregar-foto' >Alterar Foto</div>
 				 <span id="status" ></span>
 				 <br>
@@ -344,18 +356,38 @@ function newPost(){
 
       ?>
 
+		<!--import para cortar imagem -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
 	  <div class="box-new-post">
-	        <b>Novo Publicação</b> <br>
+	        <b>Nova Publicação</b> <br>
 			<form action="main.php?page=setnewpostuser" method="POST">
-					<div class='files'></div>
+					<div class='files' id="files">
+						<img src="" id="img-arquivo" value="">
+						   
+					</div>
+                    <!-- Armazena a imagem em blob no banco de dados-->
+					<input type='hidden' id='blob-image' name='blob-image' value=''>
+
 					<div id='upload' class='carregar-foto' >carregar imagem</div>
 								<span id="status" ></span>
 								<textarea  id="new-post-text" name="new-post-text"
 								rows="5" cols="33"  maxlength ="500">Descrição da postagem
 								</textarea><br>
 								<br><br>
+				
+					   <input type="button" value="cortar" id="button-cortar">
+                    		
 					<input type="submit" value="postar" name="opc" id="bt-enviar-cad-user" >
 			</form>
+            <script>
+				
+
+			</script>
+
+            
+			
+			
+                        
     </div>				 
 	  <?php
 
@@ -379,14 +411,13 @@ function openUserPost($user_id, $post_id){
 	 ?>
 	   <div class="box-user-post-item">
 		   <div class="box-image-user-post-item">
-		      <image src="../images/users/<?php print $dados["user_new_post_image"] ;?>">
+		      <image src="<?php print $dados["user_new_post_blob_image"] ;?>">
 	       </div>
 		   <div class="box-info-user-post">
 			
 				<div class="profile-info-left"> 
-							<div class="user-image-profile" 
-							     style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>')"> 
-							     <div class="moldura-profile-pequena"></div>
+							<div > 
+							    <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile">
 							</div>
 							<div class="box-info-text-left-profile">
 								<?php print $dados["user_name"] ;?>
@@ -443,18 +474,17 @@ function feeds(){
 	 ?>
 	   <div class="feed-box-user-post-item">
 		   
-			<a href="main.php?page=openuserpost&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
+			<a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
 			<div class="box-image-user-post-item">
-				<image src="../images/users/<?php print $dados["user_new_post_image"] ;?>">
+				<image src="<?php print $dados["user_new_post_blob_image"] ;?>">
 			</div>
 			</a>
 
 		   <div class="box-info-user-post">
 			
 				<div class="profile-info-left"> 
-							<div class="user-image-profile" 
-							     style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>')"> 
-							     <div class="moldura-profile-pequena"></div>
+							<div> 
+							   <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed"> 
 							</div>
 							<div class="box-info-text-left-profile">
 								<?php print $dados["user_name"] ;?>
@@ -513,15 +543,19 @@ function topMenu(){
 			   {
 			  ?>
 			   	<a href="main.php?page=userLogin">
-					<div class="user-image-profile" 
-					style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>')"> 
-					<div class="moldura-profile-pequena"></div>
+					
+					<div class="user-image-profile">
+					   <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-top"> 
 					</div>
-			    </a>
+				</a>
+
 				<a href="main.php?page=feeds">	
 				   <div class="top-menu-itens"><img src="../images/layout/logo-meet-icon-01.jpg"></div> 
 			    </a>   
-            </div>
+            </div><!--fecha left-top-menu-itens -->
+
+
+
 			<?php
 			   }//fecha while
 			?>
@@ -530,6 +564,9 @@ function topMenu(){
 				<div class="top-menu-itens"><img src="../images/layout/notification-icon-01.jpg"></div>
 			<a href="main.php?page=settings">
 				<div class="top-menu-itens"><img src="../images/layout/ajustes-icon-01.jpg"></div>
+			</a>
+			<a href="main.php?page=logoff">
+				<div class="top-menu-itens"><img src="../images/layout/logoff-icon-01.jpg"> </div>
 			</a>
 			</div>
 		</div>
