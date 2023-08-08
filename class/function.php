@@ -424,17 +424,17 @@ function openUserPost($user_id, $post_id){
 							</div>
                             <!--like icon -->
 							<div class="user-iten-bt-like">
-					           <img src="../images/layout/like-black-icon-01.png" style="padding-left:20px;">  
+					           <img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
 							<div class="user-iten-bt-msg">
-					           <img src="../images/layout/msg-black-icon-01.png" style="padding-left:20px;">  
+					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
 						
 				</div>	
 					
 				
 					<div class="post-item-info-rigth">
-					    <img src="../images/layout/calendario-pequeno-01.png" >
+					    <img src="../images/layout/svg/calendar-icon-01.svg" width="25" >
 						<?php print separarData($dados["user_new_post_date"]) ;?>
 					</div>
 				</div>
@@ -491,17 +491,17 @@ function feeds(){
 							</div>
                             <!--like icon -->
 							<div class="user-iten-bt-like">
-					           <img src="../images/layout/like-black-icon-01.png" style="padding-left:20px;">  
+					           <img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
 							<div class="user-iten-bt-msg">
-					           <img src="../images/layout/msg-black-icon-01.png" style="padding-left:20px;">  
+					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
 						
 				</div>	
 					
 				
 					<div class="post-item-info-rigth">
-					    <img src="../images/layout/calendario-pequeno-01.png" >
+					    <img src="../images/layout/svg/calendar-icon-01.svg" width="25" >
 						<?php print separarData($dados["user_new_post_date"]) ;?>
 					</div>
 				</div>
@@ -561,12 +561,12 @@ function topMenu(){
 			?>
 		   
 			<div class="rigth-top-menu-itens"> 
-				<div class="top-menu-itens"><img src="../images/layout/notification-icon-01.jpg"></div>
+				<div class="top-menu-itens"><img src="../images/layout/svg/notification-icon-01.svg" width="25"></div>
 			<a href="main.php?page=settings">
-				<div class="top-menu-itens"><img src="../images/layout/ajustes-icon-01.jpg"></div>
+				<div class="top-menu-itens"><img src="../images/layout/svg/settings-icon-01.svg" width="25"></div>
 			</a>
 			<a href="main.php?page=logoff">
-				<div class="top-menu-itens"><img src="../images/layout/logoff-icon-01.jpg"> </div>
+				<div class="top-menu-itens"><img src="../images/layout/svg/logoff-icon-01.svg" width="25"> </div>
 			</a>
 			</div>
 		</div>
@@ -578,16 +578,16 @@ function footMenu(){
 	?>
 	<div class="box-foot-menu">
 			<a href="main.php?page=feeds">
-				<div class="foot-menu-itens"><img src="../images/layout/home-icon-01.jpg"></div>
+				<div class="foot-menu-itens"><img src="../images/layout/svg/home-icon-01.svg" width="25"></div>
             </a>
 			<a href="main.php?page=search">	
-				<div class="foot-menu-itens"><img src="../images/layout/search-icon-01.jpg"></div>
+				<div class="foot-menu-itens"><img src="../images/layout/svg/search-icon.svg" width="25" ></div>
             </a>
 			<a href="main.php?page=newpost">
-				<div class="foot-menu-itens"><img src="../images/layout/newpost-icon-01.jpg"></div>
+				<div class="foot-menu-itens"><img src="../images/layout/svg/new-post-icon.svg" width="25"></div>
             </a>	
 			<a href="main.php?page=configuration">
-				<div class="foot-menu-itens"><img src="../images/layout/config-icon-01.jpg"></div>
+				<div class="foot-menu-itens"><img src="../images/layout/svg/more-finfo-icon-01.svg" width="25"></div>
             </a>
     </div>
 	<?php
