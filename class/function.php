@@ -413,6 +413,36 @@ function openUserPost($user_id, $post_id){
 		   <div class="box-image-user-post-item">
 		      <image src="<?php print $dados["user_new_post_blob_image"] ;?>">
 	       </div>
+
+		   <?php 
+		    if($dados["user_new_post_user_id"] == $_SESSION['user_id'])
+			 {
+				?>
+				
+					<div class="box-user-post-settings">
+					    <div class="box-user-post-menu-expand">
+
+						   
+							deseja realmente excluir? <br>
+							<a href="main.php?page=removepost&post_id=<?php print $dados["user_new_post_id"] ;?>">
+							    sim 
+							</a> 
+							<a href="#" class="bt-close-expand-options-feed">
+							    não 
+							</a> 
+
+			            </div>
+						   <img src="../images/layout/svg/remove-01.svg" width="25" class="bt-remove-post">
+						
+						
+				   </div>
+					
+
+		   <?php
+		   }//fecha if 
+		   ?>
+
+
 		   <div class="box-info-user-post">
 			
 				<div class="profile-info-left"> 
@@ -446,7 +476,23 @@ function openUserPost($user_id, $post_id){
 
 
        </div>
-	 
+	  
+       <script>
+        let remoElement = document.querySelector(".bt-remove-post");
+		let boxUserPost = document.querySelector(".box-user-post-menu-expand");
+		let closeboxUserPost = document.querySelector(".bt-close-expand-options-feed");
+		
+		
+		remoElement.addEventListener("click", function(e){
+			boxUserPost.style.visibility = "visible";
+		});
+
+		closeboxUserPost.addEventListener("click", function(e){
+			boxUserPost.style.visibility = "hidden";
+		});
+
+	   </script>
+
 	<?php
     
    }//fecha while
@@ -490,10 +536,45 @@ function feeds(){
 								<?php print $dados["user_name"] ;?>
 							</div>
                             <!--like icon -->
-							<div class="user-iten-bt-like">
-					           <img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
-	                        </div>
-							<div class="user-iten-bt-msg">
+
+							<?php
+
+							    
+								$sql1 = "SELECT  * FROM likes
+								WHERE like_user_id = ".trim($_SESSION['user_id'])."
+								AND 
+								like_post_id = ".$dados["user_new_post_id"]." ";
+								$query1 = $mysqli->query($sql1);
+								$numRows =  $query1->num_rows;//número de linhas
+								if($numRows >= 1){
+                                   
+									//já deu like
+									?>
+								<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
+								    <img src="../images/layout/svg/heart-like-icon-active.svg" width="25" style="padding-left:20px;">  
+								    </div>
+							    <?php
+
+								}else{
+							?>
+								<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
+								<img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
+								</div>
+							<?php
+							}
+						
+							//numero de curtidas
+							$sql2 =   "SELECT  * FROM likes
+									   WHERE like_post_id = ".$dados["user_new_post_id"]." ";
+									   $query2 = $mysqli->query($sql2);
+									   $numLikes =  $query2->num_rows;//número de linhas
+									   print "".$numLikes;
+							
+							
+
+							?>
+
+							<div class="user-iten-bt-msg" id="message-<?php print $dados["user_new_post_id"]; ?>">
 					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
 						
@@ -513,11 +594,57 @@ function feeds(){
 
 
        </div>
+
+
+	   
 	 
 	<?php
     
    }//fecha while
      
+
+   ?>
+
+
+        <script>
+		    let itenLike = document.querySelectorAll('.user-iten-bt-like');
+			
+			
+			
+			for(let i=0; i< itenLike.length; i++ ){
+
+					itenLike[i].addEventListener("click", function(e){
+						//alert(this.id);
+					//pegando apenas o id
+					let likeId = this.id.split("-");
+						//alert('id:'+likeId[1]); 
+					
+						
+						
+						//Ajax função
+						
+						let url = 'requisicoesajax.php?page=setlike&postid='+likeId[1]+'';
+						let xhr = new XMLHttpRequest();
+						xhr.open("GET", url, true);
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4) {
+								if (xhr.status = 200)
+									console.log(xhr.responseText);
+									//setando o novo icone de like vermelho like
+									let setActiveLike = document.getElementById("like-"+likeId[1]);
+						                setActiveLike.innerHTML = " <img src='../images/layout/svg/heart-like-icon-active.svg' width='25' style='padding-left:20px;'>";
+								}
+							}
+							xhr.send();
+                         
+						
+					});
+				}//fecha o for();
+
+
+	   </script>
+
+   <?php
    
 }
 

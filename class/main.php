@@ -30,7 +30,8 @@
 			 
 			    if(isset($_GET["page"])){
 					
-                            
+					if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+					session_start(); 
 							if($_GET["page"] == "cadUser"){
 								
 									$sql = "INSERT INTO user (       
@@ -113,7 +114,9 @@
 										
 										
 										print "<div class='box-info-center'>
-												<span> 
+												<p>
+												<p>
+										        <span> 
 													Publicaçâo efetuada!
 												</span>
 											</div>";
@@ -133,6 +136,7 @@
 							if($_GET["page"] == "newpost"){
 								
 								newPost();
+
 							}if($_GET["page"] =="openuserpost"){
 								
 								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
@@ -142,17 +146,25 @@
 							}if($_GET["page"] =="feeds"){
 								
 								feeds();
+
 							}if($_GET["page"] =="search"){
 							  
+								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+								 session_start(); 
 								print "<p>Search";
 							
 							}if($_GET["page"] =="configuration"){
 								
+								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+								 session_start(); 
 								print "<p>configuration";
 
 							}if($_GET["page"] =="settings"){
 								
+								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+								 session_start(); 
 								print "<p>settings";
+							
 							}if($_GET["page"] =="logoff"){
 								
 								//destruindo a SESSAO
@@ -164,15 +176,37 @@
 									window.location.href = "main.php";
 								</script>
 								<?php
+							}if($_GET["page"] =="removepost"){
+								
+								$mysqli = conectar();
+								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+								 session_start(); 
+
+								 $sql = "DELETE  FROM user_new_post   
+								                 WHERE user_new_post_id = ".$_GET["post_id"];
+			                     $query = $mysqli->query($sql);
+								 print "<p><p>Postagem Removida com sucesso!";
+
+								
+							}if($_GET["page"] =="setlike"){
+								
+								print $_GET["postid"];
+								
 							}
 							
 							
+							
+
 
 							
+							
+
+							
+							if (isset($_SESSION)){ //necessário inicializar sessão sempre que uma página nova é criada
 							
 							topMenu();//desenha o topo    
 							footMenu();//Desenha o footMenu	
-
+						  }
 				}else{
 					
                    //CadUser();//chama user();
