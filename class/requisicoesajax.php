@@ -25,5 +25,18 @@
         }
 
         
+    }if($_GET["page"] =="setmessage"){
+       
+        print "".$_GET["useid"]."-".$_GET["msg"];
+        $sql = "INSERT INTO post_message (message_user_id,
+                                     message_post_id,	
+                                     message_text,
+                                     message_date) 
+                              values( ".$_SESSION['user_id'].",
+                                      ".$_GET["postid"].",
+                                      '".$_GET["msg"]."',
+                                      NOW())";
+        $query = $mysqli->query($sql);
+
     }
 ?>

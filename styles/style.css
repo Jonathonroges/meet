@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=Roboto:wght@300&display=swap');
 
 body{
 	margin: 0;
 	padding: 0;
 	font-family: 'Abel', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 /*Para telas que tenham até no maximo 601px, vai de 0px até 601 */
@@ -357,6 +358,20 @@ body{
 		width: 50px;
 		height: 50px;
 	}
+	/*icone pequeno para post de mensagens(comentarios)*/
+	.user-image-profile-feed-message{
+		float: left;
+		background-repeat: no-repeat;
+		background-position: 1px 1px;
+		width: 33px;
+		height: 33px;
+	}
+	.bt-feed-publicar{
+		text-decoration: none;
+		padding-left: 8px;
+		color: cornflowerblue;
+		font-weight: bold;
+	}
 
 	.moldura-profile-pequena{
 		display: block;
@@ -451,8 +466,80 @@ body{
 	color: #FFFFFF;
 	
   }
+  .box-feeds-comentarios{
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: flex-start;
+   background-color: #FFFFFF;
+  }
+  .box-input-text-comentario{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	
+	margin: 8px;
+	border: 1px solid #E7E7E7;
+	background-color: #E7E7E7;
+  }
+  .box-input-text-comentario input{
+	outline: none;
+	text-indent: 10px;
+	padding: 8px;
+	margin-left: 4px;
+	background-color: transparent;
 
+	border: none;
+  }
+  .box-list-feed-messages{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	width: 100%;
+	/*border: 1px solid #E7E7E7;*/
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
+  }
+  .title-feeds-messages{
+	display: block;
+	padding-left: 8px;
+	font-weight: bolder;
+  }
+.box-container-message{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	/*border: 1px solid #f10000;*/
+	padding: 8px;
+}
+.container-message-rigth{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	align-content: flex-start;
+	padding-left: 8px;
+	padding-top: 8px;
+}
+.msg-user-neme-text-name{
+	font-weight: bold;
+	margin: 0;padding: 0;
+}
+.msg-user-neme-text-date{
+	display: block;
+	
+	color: #c5c5c5;
+	margin-top: 5px;
+	font-size: 0.9em;
+	
+}
+.container-message-rigth-actions{
+	display: flex;
+	border: 1px solid #c5c5c5;
+	padding: 8px;
 
+}
 
 /*}*/
 

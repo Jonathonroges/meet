@@ -157,7 +157,7 @@ function areaUser(){
 		//print "->>>nao existe".$_POST["userEmail"]." <<- ";
 		
 		$sql = "SELECT * FROM user 
-	                 WHERE user_email = '".trim($_POST["userEmail"])."'   
+	                 WHERE user_email = '".strtolower( trim($_POST["userEmail"])  )."'   
 	                 AND  user_password = '".trim($_POST["userPassword"])."'  ";
 	}else{
 		
@@ -507,6 +507,10 @@ function feeds(){
 	$mysqli = conectar();
 	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
 	    session_start(); 
+
+	$userImag = "";
+	$userName = "";
+	
 	
 	$sql = "SELECT DISTINCT * FROM user_new_post , user
 	                          WHERE user_new_post_user_id = user_id 
@@ -569,14 +573,20 @@ function feeds(){
 									   $query2 = $mysqli->query($sql2);
 									   $numLikes =  $query2->num_rows;//número de linhas
 									   print "".$numLikes;
-							
-							
-
 							?>
-
+                            
+							
 							<div class="user-iten-bt-msg" id="message-<?php print $dados["user_new_post_id"]; ?>">
 					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
+
+							<?php
+								$sql3 =   "SELECT  * FROM post_message
+										WHERE message_post_id = ".$dados["user_new_post_id"]." ";
+										$query3 = $mysqli->query($sql3);
+										$numMsg =  $query3->num_rows;//número de linhas
+										print "&nbsp;&nbsp;".$numMsg;
+							?>
 						
 				</div>	
 					
@@ -591,25 +601,56 @@ function feeds(){
 			<div class="post-item-description">
 				       <?php print $dados["user_new_post_description"];?>
 			</div><!--post-item-description-->
+			<!--Comentarios -->
+            <?php
+			//buscando foto de usuario logado
+			 $sql = "SELECT * FROM user
+			         WHERE user_id = ".$_SESSION['user_id']."";
+
+		  
+			$query3 = $mysqli->query($sql);
+			$numRows =  $query3->num_rows;//número de linhas
+            $dados1 = $query3->fetch_assoc();
+			
+			$userImag = $dados1["user_photo_perfil_blob"];//passa a foto do usuario para um scopo Global
+			$userName = $dados1["user_name"];//passa a foto do usuario para um scopo Global
+			
+
+						?> 
+
+
+
+			<div class="box-feeds-comentarios">
+				<div class="box-input-text-comentario">
+				    <img src="<?php print $dados1["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed-message" > 
+					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
+				    <a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
+				</div>
+				
+				<!-- Lista de comentarios-->
+				<br>
+				 <span class="title-feeds-messages">Comentarios</span>
+				<br>
+				<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>">
+				</div>
+				<!--lendo lista de mensagens  -->
+				<?php
+                   //função para listar comentarios
+				   listMessages(   $dados["user_new_post_id"] );
+                ?>
+			</div>
 
 
        </div>
 
-
-	   
-	 
-	<?php
+<?php
     
    }//fecha while
      
 
    ?>
-
-
-        <script>
+     <script>
 		    let itenLike = document.querySelectorAll('.user-iten-bt-like');
-			
-			
 			
 			for(let i=0; i< itenLike.length; i++ ){
 
@@ -618,10 +659,7 @@ function feeds(){
 					//pegando apenas o id
 					let likeId = this.id.split("-");
 						//alert('id:'+likeId[1]); 
-					
-						
-						
-						//Ajax função
+					   //Ajax função
 						
 						let url = 'requisicoesajax.php?page=setlike&postid='+likeId[1]+'';
 						let xhr = new XMLHttpRequest();
@@ -636,17 +674,123 @@ function feeds(){
 								}
 							}
 							xhr.send();
-                         
-						
-					});
+                    });
 				}//fecha o for();
 
 
-	   </script>
+               //escrevendo um comentario
+			   let setMessage = document.querySelectorAll('.bt-feed-publicar');
+			   
+			   for(let i=0; i< itenLike.length; i++ ){
+
+				        
+						
+						setMessage[i].addEventListener("click", function(e){
+							e.preventDefault();
+                            
+							//verificando valor do input tex
+							//alert(this.id);
+							
+
+							let message = this.id.split("-");//separando [id]
+							//alert(message[1].trim());
+                            let getBoxMgs =  document.getElementById("msg-"+message[1].trim());
+							
+							let getMsgTex =  document.getElementById("input-message-"+message[1].trim());
+							//alert(getMsgTex.value);
+							if( getMsgTex.value != ""){
+                              
+								let html = " <img src='<?php print $userImag; ?>' "+
+								                 "class='user-image-profile-feed-message'>"+
+												 "<b><?php print $userName; ?></b> "+
+							                     " "+getMsgTex.value+" ";
+							                     
+												   getBoxMgs.innerHTML = html;
+
+                                                  //gravando os comentarios
+												let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&postid='+message[1].trim()+'&msg='+getMsgTex.value+'';
+												
+												
+												
+												let xhr = new XMLHttpRequest();
+												xhr.open("GET", url, true);
+												xhr.onreadystatechange = function() {
+													if (xhr.readyState == 4) {
+														if (xhr.status = 200)
+															//console.log(xhr.responseText);
+															getMsgTex.value = "";//lempa o texto do input
+															//setando o novo icone de like vermelho like
+															
+														}
+													}
+													xhr.send();
+                               }
+
+							});
+               
+			   }//fecha o for();
+
+
+   </script>
 
    <?php
    
 }
+
+function listMessages( $post_id ){
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+	    session_start(); 
+       // print "->".$post_id."<-<p>";
+		
+		$sql = "SELECT DISTINCT  * FROM post_message , user_new_post, user
+				WHERE  message_post_id 	 = ".trim($post_id)." 
+				AND    message_user_id  = user_new_post_user_id 
+				AND    user_id = message_user_id	
+					   GROUP BY message_id 
+					   ORDER BY message_id DESC LIMIT 50";
+        
+		
+
+		$query = $mysqli->query($sql);
+		$numRows =  $query->num_rows;//número de linhas
+
+		while (    $dados = $query->fetch_assoc()  ) {
+           ?>
+            <div class="box-container-message">
+				<div class="container-message-left">
+				    <img src='<?php print $dados["user_photo_perfil_blob"]; ?>' class='user-image-profile-feed-message'>
+			        <div class="container-message-rigth">
+				   <?php
+				      print "<span class='msg-user-neme-text-name'>
+					            ".$dados["user_name"]."
+					         </span>
+					         ".$dados["message_text"]."
+							 <span class='msg-user-neme-text-date'>
+							    ".separarData($dados["message_date"])." as ".separarHora($dados["message_date"])."
+							 </span>
+								"; 
+					?>
+					 
+				</div>
+			</div>
+				
+			<div class="container-message-rigth-actions">
+				      ...
+		    </div>
+				
+			</div>
+
+			<?php
+
+
+		}
+
+
+
+} 
+
+
 
 function topMenu(){
 	?>

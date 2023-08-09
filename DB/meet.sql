@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 08, 2023 at 06:48 PM
+-- Generation Time: Aug 09, 2023 at 05:50 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `likes` (
   `like_user_id` int(11) DEFAULT NULL,
   `like_post_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`like_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `likes`
@@ -46,22 +46,39 @@ INSERT INTO `likes` (`like_id`, `like_user_id`, `like_post_id`) VALUES
 (6, 7, 22),
 (7, 7, 21),
 (8, 7, 19),
-(9, 8, 25);
+(9, 8, 25),
+(10, 8, 22),
+(11, 8, 19),
+(12, 8, 23);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message`
+-- Table structure for table `post_message`
 --
 
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE IF NOT EXISTS `message` (
+DROP TABLE IF EXISTS `post_message`;
+CREATE TABLE IF NOT EXISTS `post_message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_user_id` int(11) DEFAULT NULL,
+  `message_post_id` int(11) DEFAULT NULL,
   `message_text` longtext,
   `message_date` datetime DEFAULT NULL,
   PRIMARY KEY (`message_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `post_message`
+--
+
+INSERT INTO `post_message` (`message_id`, `message_user_id`, `message_post_id`, `message_text`, `message_date`) VALUES
+(13, 8, 25, 'gfgfgf fgfgf', '2023-08-09 13:21:09'),
+(12, 8, 25, 'montanha russa 3 msg', '2023-08-09 12:12:29'),
+(11, 8, 25, 'montanha russa 2 mgs', '2023-08-09 12:12:11'),
+(10, 8, 22, 'fashiin Black luck teste msg', '2023-08-09 12:09:37'),
+(9, 8, 23, 'montanha russa msg', '2023-08-09 12:08:50'),
+(14, 7, 25, 'Eu não encararia ', '2023-08-09 13:37:20'),
+(15, 7, 21, 'Amei essa foto :)', '2023-08-09 14:48:58');
 
 -- --------------------------------------------------------
 
