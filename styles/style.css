@@ -550,6 +550,43 @@ body{
 	right: 50px;
 }
 
+.box-geral-search{
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-top: 50px;
+}
+.box-input-search input{
+      outline: none;
+	  font-size: 18px;
+	  border: none;
+	  border-bottom: 1px solid #f54974;
+
+}
+.box-searc-results{
+	position: relative;
+	margin-left: 8px;
+}
+.box-searc-results a{
+	text-decoration: none;
+	font-weight: bold;
+	color: #080808;
+	letter-spacing: 2px;
+}
+
+.box-resul-searc-list{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+.searc-title-user-name{
+	display: block;
+	font-weight: bold;
+	padding-left: 8px;
+}
+
+
 /*}*/
 
 

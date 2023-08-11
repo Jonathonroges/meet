@@ -143,7 +143,7 @@ function windowLoginUser(){
 
 }
 
-function areaUser(){
+function areaUser( $userId ){
 	
 	$mysqli = conectar();
 
@@ -152,18 +152,19 @@ function areaUser(){
 	if (!isset($_SESSION))
 		session_start(); 
 		
-      if(!isset($_SESSION['user_id'])){
+      if( $userId == NULL){
 		
 		//print "->>>nao existe".$_POST["userEmail"]." <<- ";
 		
 		$sql = "SELECT * FROM user 
 	                 WHERE user_email = '".strtolower( trim($_POST["userEmail"])  )."'   
 	                 AND  user_password = '".trim($_POST["userPassword"])."'  ";
+					 $userId = "logado";
 	}else{
 		
 		//print "->>>existe".$_POST["userEmail"]." <<- ";
 		$sql = "SELECT * FROM user 
-	                 WHERE user_id = ".$_SESSION['user_id']."  ";
+	                 WHERE user_id = ".$userId."  ";
 	}
 	
 	
@@ -176,9 +177,11 @@ function areaUser(){
 	//print "->".$_POST["userEmail"]." - ".$_POST["userPassword"]."numRows = ".$numRows ."";
 	while (    $dados = $query->fetch_assoc()  ) {
 				  //print "usuario encontrado '".$dados["user_name"]."";
-				 
-				  $_SESSION['user_id'] = $dados["user_id"] ;
-                   ?>
+				 if($userId == "logado"){
+				     $_SESSION['user_id'] = $dados["user_id"] ;//só atribui se ele logar pela primeira vez
+					 $userId = $_SESSION['user_id'];
+				 }  
+				   ?>
                   <div class='box-geral-profile'>
                         
 				        <div class="box-info-tex-profile">
@@ -207,7 +210,7 @@ function areaUser(){
 		//Listando postagens
 		
 		$sql = "SELECT * FROM user_new_post 
-		                 WHERE user_new_post_user_id = ".$_SESSION['user_id']." ORDER BY user_new_post_id DESC  ";
+		                 WHERE user_new_post_user_id = ".$userId." ORDER BY user_new_post_id DESC  "; //.$_SESSION['user_id'] , $userId
                 
 				$query = $mysqli->query($sql);
 				$numRows =  $query->num_rows;//número de linhas
@@ -402,8 +405,8 @@ function openUserPost($user_id, $post_id){
 	
 	$sql = "SELECT * FROM user, user_new_post
 	                 WHERE user_new_post_id = ".$post_id."
-					 AND   user_id = ".$user_id."";
-	
+					 AND   user_id = ".$user_id."";//$user_id , $_SESSION['user_id']
+					 
 				  
 	$query = $mysqli->query($sql);
 	$numRows =  $query->num_rows;//número de linhas
@@ -458,9 +461,15 @@ function openUserPost($user_id, $post_id){
 							<div class="user-iten-bt-like">
 					           <img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
 	                        </div>
-							<div class="user-iten-bt-msg">
-					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
-	                        </div>
+                            <?php
+							//numero de curtidas
+							$sql2 =   "SELECT  * FROM likes
+									   WHERE like_post_id = ".$dados["user_new_post_id"]." ";
+									   $query2 = $mysqli->query($sql2);
+									   $numLikes =  $query2->num_rows;//número de linhas
+									   print "".$numLikes;
+							?>
+                            
 						
 				</div>	
 					
@@ -475,18 +484,27 @@ function openUserPost($user_id, $post_id){
 			<div class="post-item-description">
 				       <?php print $dados["user_new_post_description"];?>
 			</div><!--post-item-description-->
+             
+
+            <?php
+						$sql1 = "SELECT * FROM user, user_new_post
+						WHERE user_new_post_id = ".$post_id."
+						AND   user_id = ". $_SESSION['user_id']."";//$user_id , $_SESSION['user_id']
+						
+					
+			            $query1 = $mysqli->query($sql1);
+			            $numRows =  $query1->num_rows;//número de linhas
+						$dados1 = $query1->fetch_assoc(); 
+			?>
 
 			<div class="box-feeds-comentarios">
 				<div class="box-input-text-comentario">
-				    <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed-message" > 
+				    <img src="<?php print $dados1["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed-message" > 
 					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
 				    <a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
 				</div>
 				
-				<!-- Lista de comentarios-->
-				<br>
-				 <span class="title-feeds-messages">Comentarios</span>
-				<br>
+				<!-- Para Adicionar o post dinamicamente-->
 				<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>">
 				</div>
 		   </div>
@@ -695,6 +713,27 @@ function feeds(){
 
 
 function jsPostMessage(){
+
+
+	//trazendo as informações do usuario logado
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+		session_start(); 
+
+	$userImag = "";
+	$userName = "";
+	
+	
+	
+	$sql = "SELECT  * FROM  user WHERE user_id = ".$_SESSION['user_id']." ";
+	
+				
+	$query = $mysqli->query($sql);
+	$numRows =  $query->num_rows;//número de linhas
+	$dados = $query->fetch_assoc();
+		
+	
+
   ?>
 	<script>
 
@@ -749,15 +788,15 @@ function jsPostMessage(){
 					//alert(getMsgTex.value);
 					if( getMsgTex.value != ""){
 					  
-						let html = " <img src='<?php print $userImag; ?>' "+
+						let html = " <img src='<?php print $dados["user_photo_perfil_blob"]; ?>' "+
 										 "class='user-image-profile-feed-message'>"+
-										 "<b><?php print $userName; ?></b> "+
+										 "<b><?php print  $dados["user_name"]; ?></b> "+
 										 " "+getMsgTex.value+" ";
 										 
 										   getBoxMgs.innerHTML = html;
 
 										  //gravando os comentarios
-										let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print $userCreatePost;?>';
+										let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print  $_SESSION['user_id'];?>';
 										let xhr = new XMLHttpRequest();
 										xhr.open("GET", url, true);
 										xhr.onreadystatechange = function() {
@@ -795,9 +834,18 @@ function jsPostMessage(){
 				 let style = window.getComputedStyle(messasgeOptionsExpand);
 					//alert(style.getPropertyValue('visibility'));
 					
+                    //escondendo todos os elemento, caso tenha algum abert(visivel)
+					let getMessageOptionsExpand = document.querySelectorAll('.box-messasge-options-expand');
+				    	
+					 
+
 					if(style.getPropertyValue('visibility') === "visible"){//caso esteja visivel, fecha
 						messasgeOptionsExpand.style.visibility = "hidden";
 					}else{
+
+						for(let i=0; i< getMessageOptionsExpand.length; i++ ){ 
+					        getMessageOptionsExpand[i].style.visibility = "hidden";
+					    }
 						messasgeOptionsExpand.style.visibility = "visible";
 					}
 					
@@ -857,11 +905,21 @@ function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se poss
 
 		$query = $mysqli->query($sql);
 		$numRows =  $query->num_rows;//número de linhas
+               
+			   ?>
+		        <span class="title-feeds-messages">Comentarios
+				    <img src="../images/layout/svg/message-icon-01.svg" width="15" style="padding-left:6px;">  
+					<?php print $numRows; ?>
+	             </span>
+               <?php
 
 		while (    $dados = $query->fetch_assoc()  ) {
            ?>
             <div class="box-container-message" id="linemgsid-<?php print $dados["message_id"]; ?>" >
-				<div class="container-message-left">
+			
+			    
+			
+			<div class="container-message-left">
 				    <img src='<?php print $dados["user_photo_perfil_blob"]; ?>' class='user-image-profile-feed-message'>
 			        <div class="container-message-rigth">
 				   <?php
@@ -900,14 +958,55 @@ function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se poss
 
 			<?php
        }//final do while
-      
-	   
-
-
-
-
 } 
 
+
+
+function searcUse(){
+
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+		session_start(); 
+	    ?>
+
+        <div class="box-geral-search">
+            <div class="box-input-search">
+			    <img src="../images/layout/svg/search-icon.svg" width="20" style="padding-left:12px;">
+				<input type="text" value="" id="inputsearc" placeholder="buscar" maxlength="20">
+            </div>
+			<div class="box-searc-results" id="box-searc-results"><!-- Aonde sera carregada os resultados da pesquisa-->
+            </div>
+
+        </div><!--fecha box-geral-search -->
+
+        <script type="text/javascript">
+			
+            let inputSearc = document.getElementById("inputsearc");
+			    inputSearc.addEventListener("keyup", function(e){
+                
+					let boxSearcResults = document.getElementById("box-searc-results");
+				 	    
+					     
+						 let url = 'requisicoesajax.php?page=searcuser&data='+this.value.trim();
+						 let xhr = new XMLHttpRequest();
+						 xhr.open("GET", url, true);
+						 xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4) {
+								if (xhr.status = 200)
+									//console.log(xhr.responseText);
+									boxSearcResults.innerHTML = xhr.responseText; //tras os resultados
+									//setando o novo icone de like vermelho like
+									
+								}
+							}
+							xhr.send();
+                        
+
+				});
+		</script>
+
+	<?php
+}
 
 
 function topMenu(){

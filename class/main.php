@@ -123,7 +123,22 @@
 
 							}if($_GET["page"] == "userLogin"){
 								
-								areaUser();
+								$mysqli = conectar();
+								$userId = NULL;
+
+								if(!isset($_SESSION)){//necessário inicializar sessão sempre que uma página nova é criada
+								
+								   session_start(); 
+								   $userId = NULL;//se não houver logado, usuario é NULL(Inexistente)
+							   
+								}else{
+									
+									$userId = $_SESSION['user_id'];    
+								}
+								 if(isset($_GET["userid"]))//está entrando como usuario buscando abrir um perfil de outra pessoa
+                                   areaUser( $_GET["userid"] );
+								 else
+								  areaUser( $userId );
 							}
 							if($_GET["page"] == "alteruser"){
 								
@@ -151,7 +166,8 @@
 							  
 								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
 								 session_start(); 
-								print "<p>Search";
+								 
+								 searcUse();
 							
 							}if($_GET["page"] =="configuration"){
 								

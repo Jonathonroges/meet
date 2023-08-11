@@ -47,6 +47,32 @@
         $query = $mysqli->query($sql);
 
     
+    }if($_GET["page"] =="searcuser"){
+        
+        //print "->data".$_GET["data"];
+        $sql = "SELECT * FROM user 
+	                     WHERE user_name LIKE '%".strtolower( trim( $_GET["data"] )  )."%' 
+                         LIMIT 20 ";
+        $query = $mysqli->query($sql);
+        $numRows =  $query->num_rows;//número de linhas
+        
+        while (    $dados = $query->fetch_assoc()  ) {
+        
+                  //print "nome: ".$dados["user_name"]."<br>";
+            ?>
+                <a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">
+                        <div class="box-resul-searc-list">
+                            <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed">
+                            <span class="searc-title-user-name">
+                            <?php print $dados["user_name"] ;?>
+                            </span>
+                        </div>
+                </a>    
+            <?php
+
+        }
+
+
     }
     
 ?>
