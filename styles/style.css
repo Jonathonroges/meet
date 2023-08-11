@@ -536,9 +536,18 @@ body{
 }
 .container-message-rigth-actions{
 	display: flex;
-	border: 1px solid #c5c5c5;
+	position: relative;
+	/*border: 1px solid #c5c5c5;*/
 	padding: 8px;
 
+}
+.box-messasge-options-expand{
+	position: absolute;
+	visibility: hidden;
+	padding: 8px;
+	border: 1px solid #f89191;
+	background-color: #ffd8d8;
+	right: 50px;
 }
 
 /*}*/

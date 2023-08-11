@@ -22,10 +22,10 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 	
 	$mysqli = new mysqli($servidor, $usuario, $senha, $banco);
 	//gravando com ascentuação
-   mysqli_query($mysqli,"SET NAMES 'utf8'");
-   mysqli_query($mysqli,'SET character_set_connection=utf8');
-   mysqli_query($mysqli,'SET character_set_client=utf8');
-   mysqli_query($mysqli,'SET character_set_results=utf8');
+   mysqli_query($mysqli,"SET NAMES 'utf8mb4'");
+   mysqli_query($mysqli,'SET character_set_connection=utf8mb4');
+   mysqli_query($mysqli,'SET character_set_client=utf8mb4');
+   mysqli_query($mysqli,'SET character_set_results=utf8mb4');
 	// Caso algo tenha dado errado, exibe uma mensagem de erro
 	 if (mysqli_connect_errno()) trigger_error(mysqli_connect_error());
    
@@ -393,7 +393,8 @@ function newPost(){
 
 }
 function openUserPost($user_id, $post_id){
-
+	
+	$gerenciarPost = false;
 	
 	$mysqli = conectar();
 	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
@@ -417,6 +418,7 @@ function openUserPost($user_id, $post_id){
 		   <?php 
 		    if($dados["user_new_post_user_id"] == $_SESSION['user_id'])
 			 {
+				$gerenciarPost = true;
 				?>
 				
 					<div class="box-user-post-settings">
@@ -474,8 +476,31 @@ function openUserPost($user_id, $post_id){
 				       <?php print $dados["user_new_post_description"];?>
 			</div><!--post-item-description-->
 
+			<div class="box-feeds-comentarios">
+				<div class="box-input-text-comentario">
+				    <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed-message" > 
+					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
+				    <a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
+				</div>
+				
+				<!-- Lista de comentarios-->
+				<br>
+				 <span class="title-feeds-messages">Comentarios</span>
+				<br>
+				<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>">
+				</div>
+		   </div>
 
-       </div>
+
+
+
+
+			    <?php
+                   //função para listar comentarios
+				   listMessages(   $dados["user_new_post_id"] , $gerenciarPost );//gerenciar é true|false para gerenciar os posts relacionados a minha postagem
+                ?>
+
+       </div><!--fim box-info-user-post -->
 	  
        <script>
         let remoElement = document.querySelector(".bt-remove-post");
@@ -498,6 +523,11 @@ function openUserPost($user_id, $post_id){
    }//fecha while
      
    
+   jsPostMessage();//chamo a função para ações javascript das mensagens | adicionar msg | excluir
+
+
+
+
 }
 
 //PAGINA FEED
@@ -510,7 +540,8 @@ function feeds(){
 
 	$userImag = "";
 	$userName = "";
-	
+	$userCreatePost = "";
+	$gerenciarPost = false;//para saber se posso gerenciar (excluir etc) as informações do post
 	
 	$sql = "SELECT DISTINCT * FROM user_new_post , user
 	                          WHERE user_new_post_user_id = user_id 
@@ -521,6 +552,16 @@ function feeds(){
 	$numRows =  $query->num_rows;//número de linhas
 	
 	while (    $dados = $query->fetch_assoc()  ) {
+
+		
+			   if($dados["user_new_post_user_id"] == $_SESSION['user_id']){
+				   $gerenciarPost = true;
+			   }else{
+				$gerenciarPost = false;
+			   }
+		
+		$userCreatePost = $dados["user_new_post_user_id"];//quem criu o post
+
 	 ?>
 	   <div class="feed-box-user-post-item">
 		   
@@ -636,108 +677,170 @@ function feeds(){
 				<!--lendo lista de mensagens  -->
 				<?php
                    //função para listar comentarios
-				   listMessages(   $dados["user_new_post_id"] );
+				   listMessages(   $dados["user_new_post_id"] , $gerenciarPost );//gerenciar é true|false para gerenciar os posts relacionados a minha postagem
                 ?>
 			</div>
 
 
        </div>
 
-<?php
+   <?php
     
    }//fecha while
      
-
-   ?>
-     <script>
-		    let itenLike = document.querySelectorAll('.user-iten-bt-like');
-			
-			for(let i=0; i< itenLike.length; i++ ){
-
-					itenLike[i].addEventListener("click", function(e){
-						//alert(this.id);
-					//pegando apenas o id
-					let likeId = this.id.split("-");
-						//alert('id:'+likeId[1]); 
-					   //Ajax função
-						
-						let url = 'requisicoesajax.php?page=setlike&postid='+likeId[1]+'';
-						let xhr = new XMLHttpRequest();
-						xhr.open("GET", url, true);
-						xhr.onreadystatechange = function() {
-							if (xhr.readyState == 4) {
-								if (xhr.status = 200)
-									console.log(xhr.responseText);
-									//setando o novo icone de like vermelho like
-									let setActiveLike = document.getElementById("like-"+likeId[1]);
-						                setActiveLike.innerHTML = " <img src='../images/layout/svg/heart-like-icon-active.svg' width='25' style='padding-left:20px;'>";
-								}
-							}
-							xhr.send();
-                    });
-				}//fecha o for();
-
-
-               //escrevendo um comentario
-			   let setMessage = document.querySelectorAll('.bt-feed-publicar');
-			   
-			   for(let i=0; i< itenLike.length; i++ ){
-
-				        
-						
-						setMessage[i].addEventListener("click", function(e){
-							e.preventDefault();
-                            
-							//verificando valor do input tex
-							//alert(this.id);
-							
-
-							let message = this.id.split("-");//separando [id]
-							//alert(message[1].trim());
-                            let getBoxMgs =  document.getElementById("msg-"+message[1].trim());
-							
-							let getMsgTex =  document.getElementById("input-message-"+message[1].trim());
-							//alert(getMsgTex.value);
-							if( getMsgTex.value != ""){
-                              
-								let html = " <img src='<?php print $userImag; ?>' "+
-								                 "class='user-image-profile-feed-message'>"+
-												 "<b><?php print $userName; ?></b> "+
-							                     " "+getMsgTex.value+" ";
-							                     
-												   getBoxMgs.innerHTML = html;
-
-                                                  //gravando os comentarios
-												let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&postid='+message[1].trim()+'&msg='+getMsgTex.value+'';
-												
-												
-												
-												let xhr = new XMLHttpRequest();
-												xhr.open("GET", url, true);
-												xhr.onreadystatechange = function() {
-													if (xhr.readyState == 4) {
-														if (xhr.status = 200)
-															//console.log(xhr.responseText);
-															getMsgTex.value = "";//lempa o texto do input
-															//setando o novo icone de like vermelho like
-															
-														}
-													}
-													xhr.send();
-                               }
-
-							});
-               
-			   }//fecha o for();
-
-
-   </script>
-
-   <?php
+   jsPostMessage();//chamo a função para ações javascript das mensagens | adicionar msg | excluir
+   
    
 }
 
-function listMessages( $post_id ){
+
+function jsPostMessage(){
+  ?>
+	<script>
+
+	/* PERCORRENDO OS LIKES E ADICIONANDO O NOVO ICONE*/
+	   //RASTREANDOCOMENTARIOS PARA ADICIONA-LO NA POSIÇÃO CERTA
+	let itenLike = document.querySelectorAll('.user-iten-bt-like');
+	
+	for(let i=0; i< itenLike.length; i++ ){
+
+			itenLike[i].addEventListener("click", function(e){
+				//alert(this.id);
+			//pegando apenas o id
+			let likeId = this.id.split("-");
+				//alert('id:'+likeId[1]); 
+			   //Ajax função
+				
+				let url = 'requisicoesajax.php?page=setlike&postid='+likeId[1]+'';
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", url, true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						if (xhr.status = 200)
+							console.log(xhr.responseText);
+							//setando o novo icone de like vermelho like
+							let setActiveLike = document.getElementById("like-"+likeId[1]);
+								setActiveLike.innerHTML = " <img src='../images/layout/svg/heart-like-icon-active.svg' width='25' style='padding-left:20px;'>";
+						}
+					}
+					xhr.send();
+			});
+		}//fecha o for();
+
+
+		/* PERCORRENDO OS COMENTARIOS E ADICIONANDO UM NÓ*/
+	   //RASTREANDO COMENTARIOS PARA ADICIONA-LO NA POSIÇÃO CERTA
+	   let setMessage = document.querySelectorAll('.bt-feed-publicar');
+	   
+	   for(let i=0; i< itenLike.length; i++ ){
+					
+					setMessage[i].addEventListener("click", function(e){
+					e.preventDefault();
+					
+					//verificando valor do input tex
+					//alert(this.id);
+					
+
+					let message = this.id.split("-");//separando [id]
+					//alert(message[1].trim());
+					let getBoxMgs =  document.getElementById("msg-"+message[1].trim());
+					
+					let getMsgTex =  document.getElementById("input-message-"+message[1].trim());
+					//alert(getMsgTex.value);
+					if( getMsgTex.value != ""){
+					  
+						let html = " <img src='<?php print $userImag; ?>' "+
+										 "class='user-image-profile-feed-message'>"+
+										 "<b><?php print $userName; ?></b> "+
+										 " "+getMsgTex.value+" ";
+										 
+										   getBoxMgs.innerHTML = html;
+
+										  //gravando os comentarios
+										let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print $userCreatePost;?>';
+										let xhr = new XMLHttpRequest();
+										xhr.open("GET", url, true);
+										xhr.onreadystatechange = function() {
+											if (xhr.readyState == 4) {
+												if (xhr.status = 200)
+													//console.log(xhr.responseText);
+													getMsgTex.value = "";//lempa o texto do input
+													//setando o novo icone de like vermelho like
+													
+												}
+											}
+											xhr.send();
+					   }
+
+					});
+	   
+	   }//fecha o for();
+</script>
+
+<script>
+	  /* PERCORRENDO OS COMENTARIOS E REMOVENDO*/
+	   //RASTREANDO BUTÃO DE REMOVER COMENTARIOS PARA REMOVE-LOS
+	   let getOptiontMessage = document.querySelectorAll('.container-message-rigth-actions');
+	   
+	   for(let i=0; i< getOptiontMessage.length; i++ ){
+			
+			
+				 getOptiontMessage[i].addEventListener("click", function(e){
+				 //e.preventDefault();
+				 let messageId = this.id.split("-");//separando [id]
+				 //alert(messageId[1].trim());
+				 //removendo visualização
+				 
+				 let messasgeOptionsExpand =  document.getElementById("messasgeOptionsExpand-"+messageId[1].trim() );
+				 let style = window.getComputedStyle(messasgeOptionsExpand);
+					//alert(style.getPropertyValue('visibility'));
+					
+					if(style.getPropertyValue('visibility') === "visible"){//caso esteja visivel, fecha
+						messasgeOptionsExpand.style.visibility = "hidden";
+					}else{
+						messasgeOptionsExpand.style.visibility = "visible";
+					}
+					
+					 
+
+					//evento no icone da lixeira
+					messasgeOptionsExpand.addEventListener("click", function(e){
+						
+							  let getBoxMsg =  document.getElementById("linemgsid-"+messageId[1].trim());
+								getBoxMsg.innerHTML = "";
+								messasgeOptionsExpand.style.visibility = "hidden";//esconse o box options
+								//gravando os comentarios
+								
+								let url = 'requisicoesajax.php?page=deletemessage&messageid='+messageId[1].trim();
+													let xhr = new XMLHttpRequest();
+													xhr.open("GET", url, true);
+													xhr.onreadystatechange = function() {
+														if (xhr.readyState == 4) {
+															if (xhr.status = 200)
+																//console.log(xhr.responseText);
+																getMsgTex.value = "";//lempa o texto do input
+																//setando o novo icone de like vermelho like
+																
+															}
+														}
+														xhr.send();
+								
+
+					})
+
+				 
+			
+				 })
+				 
+		}//fecha for
+
+   </script>
+ <?php
+
+}
+
+
+function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se posso gerenciar os comentarios
 	$mysqli = conectar();
 	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
 	    session_start(); 
@@ -757,7 +860,7 @@ function listMessages( $post_id ){
 
 		while (    $dados = $query->fetch_assoc()  ) {
            ?>
-            <div class="box-container-message">
+            <div class="box-container-message" id="linemgsid-<?php print $dados["message_id"]; ?>" >
 				<div class="container-message-left">
 				    <img src='<?php print $dados["user_photo_perfil_blob"]; ?>' class='user-image-profile-feed-message'>
 			        <div class="container-message-rigth">
@@ -775,16 +878,31 @@ function listMessages( $post_id ){
 				</div>
 			</div>
 				
-			<div class="container-message-rigth-actions">
-				      ...
-		    </div>
-				
+
+			<?php
+			     
+
+			  // if(   $dados["message_user_id"] == $_SESSION['user_id'] ||  $userCreatePost == $dados["message_user_id"]){
+
+                if(   $gerenciarPost ||  $dados["message_user_id"] == $_SESSION['user_id']  ){ 
+			 ?>
+				<div class="container-message-rigth-actions" id="mgsid-<?php print $dados["message_id"]; ?>" >
+				      <img src="../images/layout/svg/more-finfo-icon-01.svg" width="25" >
+					  
+					  <div class="box-messasge-options-expand" id="messasgeOptionsExpand-<?php print $dados["message_id"]; ?>">
+					     <img src="../images/layout/svg/remove-01.svg" width="25" >
+				      </div>
+				</div>
+			<?php
+			   }//fecha o if
+			 ?>
 			</div>
 
 			<?php
+       }//final do while
+      
+	   
 
-
-		}
 
 
 

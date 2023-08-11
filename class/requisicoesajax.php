@@ -6,7 +6,7 @@
 
     if($_GET["page"] =="setlike"){
                                     
-        print $_GET["postid"];
+       // print $_GET["postid"];
         //inserindo like
         //verificando se já possui o like do usuario
         $sql = "SELECT  * FROM likes
@@ -31,12 +31,22 @@
         $sql = "INSERT INTO post_message (message_user_id,
                                      message_post_id,	
                                      message_text,
-                                     message_date) 
+                                     message_date,
+                                     message_user_create_post) 
                               values( ".$_SESSION['user_id'].",
                                       ".$_GET["postid"].",
                                       '".$_GET["msg"]."',
-                                      NOW())";
+                                      NOW(),
+                                      ".$_GET["usercreatepost"].")";
         $query = $mysqli->query($sql);
 
+    }if($_GET["page"] =="deletemessage"){
+        
+        //print "->".$_GET["messageid"];
+        $sql = "DELETE FROM post_message WHERE message_id = ".$_GET["messageid"]."";
+        $query = $mysqli->query($sql);
+
+    
     }
+    
 ?>
