@@ -30,7 +30,7 @@ function uploadsFile(){
 					
 					return false;//se a extenção for invalida
 				}
-				status.text('<h3>Enviando...</h3>');
+				status.text('aguarde...');
 				
 			},
 			onComplete: function(file, response){
@@ -61,34 +61,7 @@ function uploadsFile(){
 				}
 
 
-				 /*Cropper na imagem*/
-				 const image = document.getElementById("img-arquivo");
-				 const imgOutput = document.getElementById("img-output");
-				 const files  = document.getElementById("files");
-				 const blobImage  = document.getElementById("blob-image");
-				 
-
-				 const mycropper = new Cropper(image,{
-					 aspectRatio:1,
-					 viewMode:2,
-				 });
-
-
-				 const buttonCortar = document.getElementById("button-cortar");
-				 buttonCortar.addEventListener("click",function(){
-                    
-					
-					document.getElementById("bt-enviar-cad-user").style.visibility = "visible";
-					
-					var cropperImg =  mycropper.getCroppedCanvas().toDataURL("image/png");
-                    blobImage.value = cropperImg
-                    files.innerHTML = "<img src='"+cropperImg+"' style='width:100%'>";
-					document.getElementById("button-cortar").style.visibility = "hidden";
-
-					//alert(blobImage.value);
-					
-					
-				 });
+			
 				 
 
 			}

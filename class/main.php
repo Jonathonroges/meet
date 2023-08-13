@@ -15,12 +15,7 @@
 			<script type="text/javascript" src="../js/cdn.es.gov.br_scripts_jquery_jquery-maskedinput_1.4.1_jquery.maskedinput-1.4.1.min.js"></script>
             
 			<!-- -->
-			<link rel="stylesheet"
-				href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
-				/>
-				<link
-				rel="stylesheet"
-				href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css"/>
+			
 
 		  <title>meet</title>
 	 </head>
@@ -87,6 +82,14 @@
 								            Dados alterados com sucesso!
 								          </span>
 						              </div>";
+									  ?>
+									<script>
+										//redireciona a página (Refresh)
+										window.location.href = "main.php?page=userLogin";
+									</script>
+									<?php
+
+
 							
 							}if($_GET["page"] == "setnewpostuser"){
 								
@@ -120,6 +123,13 @@
 													Publicaçâo efetuada!
 												</span>
 											</div>";
+
+											?>
+											<script>
+												//redireciona a página (Refresh)
+												window.location.href = "main.php?page=userLogin";
+											</script>
+											<?php
 
 							}if($_GET["page"] == "userLogin"){
 								
@@ -209,6 +219,17 @@
 								print $_GET["postid"];
 								
 							}
+							if($_GET["page"] =="editImageCropper"){
+								
+								cropperImage();
+								
+							}if($_GET["page"] =="notification"){
+								
+								notification();
+								
+							}
+							
+							
 							
 							
 							

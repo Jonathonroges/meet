@@ -22,6 +22,29 @@
                            values( ".$_SESSION['user_id'].", ".trim($_GET["postid"]).")";
             $query = $mysqli->query($sql);
            // print "inseriu";
+
+                
+
+                    //Inserindo notificação
+                        $sql = "INSERT INTO notifications (
+                            notifications_user_id,
+                            notification_sender_id,
+                            notifications_type,	
+                            notifications_description,
+                            notifications_view,
+                            notifications_deleteded,
+                            notifications_date) 
+                    values( ".trim($_GET["userdestinacao"]).",
+                            ".$_SESSION['user_id'].",
+                            'like',
+                            'Curtiu seu post',
+                            'no',
+                            'no',
+                            NOW() )";
+                           $query = $mysqli->query($sql);
+
+
+
         }
 
         
@@ -39,6 +62,28 @@
                                       NOW(),
                                       ".$_GET["usercreatepost"].")";
         $query = $mysqli->query($sql);
+
+        //ADICIONANDO TAMBEM NOTIFICAÇÃO QUE EXISTE UMA NOVA MENSAGEM
+        
+                        $sql = "INSERT INTO notifications (
+                            notifications_user_id,
+                            notification_sender_id,
+                            notifications_type,	
+                            notifications_description,
+                            notifications_text,
+                            notifications_view,
+                            notifications_deleteded,
+                            notifications_date) 
+                    values( ".trim($_GET["userdestinacao"]).",
+                            ".$_SESSION['user_id'].",
+                            'message',
+                            'Envio uma menssagem',
+                            '".$_GET["msg"]."',
+                            'no',
+                            'no',
+                            NOW() )";
+        $query = $mysqli->query($sql);
+
 
     }if($_GET["page"] =="deletemessage"){
         
@@ -62,7 +107,7 @@
             ?>
                 <a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">
                         <div class="box-resul-searc-list">
-                            <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed">
+                            <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed">
                             <span class="searc-title-user-name">
                             <?php print $dados["user_name"] ;?>
                             </span>
@@ -73,6 +118,55 @@
         }
 
 
+    }if($_GET["page"] =="editimagecropper"){
+        
+       // The file
+           print "scr = ".$_GET["src"]."<br>
+                  left = ".$_GET["left"]."<br>
+                  top = ".$_GET["top"]."     
+           ";
+            
+            $filename = $_GET["src"];
+            $percent = 0.5;
+            
+
+            // Content type
+            //header('Content-Type: image/jpeg');
+            
+            // Get new dimensions
+            $lista = array();
+            $lista = getimagesize($filename);
+            
+            $larguraOriginal = $lista[0];//obtemos a largura
+            $alturaOriginal = $lista[1];//obtemos a largura - [2]ipo(GIF,PNG,JPEG,SWF,PSD,BPM) - [3] é uma string com o height="yyy" width="xxx" correto que pode ser usado diretamente numa tag IMG.
+
+           // print "->W :".$larguraOriginal." -> ".$alturaOriginal." <br>";
+
+            $newwidth = 300;//crio uma imagem quadrada
+            $newheight = 300;//crio uma imagem quadrada
+
+            // Resample
+            $image_p = imagecreatetruecolor($newwidth, $newheight);
+            
+            $image = imagecreatefromjpeg($filename);
+            $imageName = "../images/users/croppers/".time().'.jpg';  //diretorio a ser gravado     
+            imagecopyresampled($image_p,//imagem criada para adicionar a imagem destino
+                            $image,//imagem origem a que é carregada
+                            0,//posição x da imagem destino 
+                            0,//distancia y do topo a ser desenhada a imagem origem em relação a imagem destino criada 
+                            0,//afasta a imagem destino em direcao a esquerda da imagem criada para acopla-la
+                            0,//afasta a imagem destino em direcao ao topo da imagem criada para acopla-la
+                            300,//nova largura tamanho da imagem criada - (achatamento)destino, createfrom dentro da imagecreatetruecolor
+                            400,//nova altura tamanho da imagem criada - destino, createfrom dentro da imagecreatetruecolor
+                            200,//zoom a partis da orimgem(x=0) widht, quanto menor, maior o zoom, considerando sempre as dimensoes originais
+                            300);//zoom a partir da origem (y=0) heiht, quanto menor, maior o zoom,considerando sempre as dimensoes originais
+
+            // Output
+            
+            imagejpeg($image_p, $imageName, 90);
+           
+
     }
+    
     
 ?>

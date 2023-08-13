@@ -191,7 +191,7 @@ function areaUser( $userId ){
 						</div>
 
 						<div class="box-moldura-profile" >
-						        <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile"> 
+						        <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile"> 
 								
 						</div>
 	             </div>	
@@ -220,8 +220,8 @@ function areaUser( $userId ){
 						
                               ?>
 							      <a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>">
-								    <div>
-										 <img src="<?php print $dados["user_new_post_blob_image"] ;?>" class="box-iten-post">
+								    <div style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>');" class="box-iten-post" >
+										 
 							             
 							        </div>
 						          </a>
@@ -279,11 +279,13 @@ function alterUser(){
 
 				 <?php 
 						//verificando se existe imagem de usuario
-						$foto = $dados["user_photo_perfil_blob"];
+						$foto = $dados["user_photo_perfil"];
 						print "<div class='files' id='files'>";//Necessário para upload da nova imagem
-						 if( strlen($foto) >10 ){
+						 
+						if(file_exists("../images/users/pequena_".$foto))
+						{
 							 print " 
-										 <img src='".$foto."'>
+										 <img src='../images/users/pequena_".$foto."'>
 										 <input type='hidden' name='arquivo' value='".$foto."'>
 										 <input type='hidden' id='blob-image' name='blob-image' value='".$foto."'>
 									 
@@ -299,8 +301,7 @@ function alterUser(){
 					 ?>
                     <input type='hidden' id='blob-image' name='blob-image' value='<?php print $foto;?> '>
 				 <br>
-				    <br>após recarrecar nova foto, clique em cortar<br> 
-                    <input type="button" value="cortar" id="button-cortar">
+				    
 				 <br>
 				 <div id='upload' class='carregar-foto' >Alterar Foto</div>
 				 <span id="status" ></span>
@@ -360,12 +361,12 @@ function newPost(){
       ?>
 
 		<!--import para cortar imagem -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+		
 	  <div class="box-new-post">
 	        <b>Nova Publicação</b> <br>
 			<form action="main.php?page=setnewpostuser" method="POST">
 					<div class='files' id="files">
-						<img src="" id="img-arquivo" value="">
+						<img src="../images/layout/default-image-post.jpg" id="img-arquivo" value="">
 						   
 					</div>
                     <!-- Armazena a imagem em blob no banco de dados-->
@@ -373,12 +374,17 @@ function newPost(){
 
 					<div id='upload' class='carregar-foto' >carregar imagem</div>
 								<span id="status" ></span>
-								<textarea  id="new-post-text" name="new-post-text"
-								rows="5" cols="33"  maxlength ="500">Descrição da postagem
-								</textarea><br>
+								<p>
+								<input type="text" 
+								       id="new-post-text" 
+									   name="new-post-text"
+								       class="new-post-text"  
+									   maxlength ="500"
+									   placeholder="Legenda">
+								<br>
 								<br><br>
 				
-					   <input type="button" value="cortar" id="button-cortar">
+					   
                     		
 					<input type="submit" value="postar" name="opc" id="bt-enviar-cad-user" >
 			</form>
@@ -415,7 +421,7 @@ function openUserPost($user_id, $post_id){
 	 ?>
 	   <div class="box-user-post-item">
 		   <div class="box-image-user-post-item">
-		      <image src="<?php print $dados["user_new_post_blob_image"] ;?>">
+		      <image  src="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
 	       </div>
 
 		   <?php 
@@ -452,7 +458,7 @@ function openUserPost($user_id, $post_id){
 			
 				<div class="profile-info-left"> 
 							<div > 
-							    <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile">
+							    <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile">
 							</div>
 							<div class="box-info-text-left-profile">
 								<?php print $dados["user_name"] ;?>
@@ -499,9 +505,10 @@ function openUserPost($user_id, $post_id){
 
 			<div class="box-feeds-comentarios">
 				<div class="box-input-text-comentario">
-				    <img src="<?php print $dados1["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed-message" > 
+				    <img src="../images/users/media_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
 					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
-				    <a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
+				    <input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
+					<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
 				</div>
 				
 				<!-- Para Adicionar o post dinamicamente-->
@@ -585,7 +592,7 @@ function feeds(){
 		   
 			<a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
 			<div class="box-image-user-post-item">
-				<image src="<?php print $dados["user_new_post_blob_image"] ;?>">
+				<image src="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
 			</div>
 			</a>
 
@@ -593,7 +600,7 @@ function feeds(){
 			
 				<div class="profile-info-left"> 
 							<div> 
-							   <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed"> 
+							   <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed"> 
 							</div>
 							<div class="box-info-text-left-profile">
 								<?php print $dados["user_name"] ;?>
@@ -615,7 +622,9 @@ function feeds(){
 									?>
 								<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
 								    <img src="../images/layout/svg/heart-like-icon-active.svg" width="25" style="padding-left:20px;">  
-								    </div>
+								</div>
+
+								
 							    <?php
 
 								}else{
@@ -623,6 +632,8 @@ function feeds(){
 								<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
 								<img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
 								</div>
+                                
+								
 							<?php
 							}
 						
@@ -633,7 +644,10 @@ function feeds(){
 									   $numLikes =  $query2->num_rows;//número de linhas
 									   print "".$numLikes;
 							?>
-                            
+                            <!--PARA CAPTURAR USUARIO DO LIKE -->
+							<input type="hidden" id="likeuserdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>" >
+							
+							
 							
 							<div class="user-iten-bt-msg" id="message-<?php print $dados["user_new_post_id"]; ?>">
 					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
@@ -681,9 +695,11 @@ function feeds(){
 
 			<div class="box-feeds-comentarios">
 				<div class="box-input-text-comentario">
-				    <img src="<?php print $dados1["user_photo_perfil_blob"] ;?>" class="user-image-profile-feed-message" > 
+				    <img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
 					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
-				    <a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
+				    <input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
+					<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
+				
 				</div>
 				
 				<!-- Lista de comentarios-->
@@ -749,8 +765,9 @@ function jsPostMessage(){
 			let likeId = this.id.split("-");
 				//alert('id:'+likeId[1]); 
 			   //Ajax função
-				
-				let url = 'requisicoesajax.php?page=setlike&postid='+likeId[1]+'';
+			   let userDestinacao = document.getElementById("userdestinacao-"+likeId[1]);//para quem a menssagem é enviada
+				//alert("->"+userDestinacao.value);
+				let url = 'requisicoesajax.php?page=setlike&postid='+likeId[1]+'&userdestinacao='+userDestinacao.value+'';
 				let xhr = new XMLHttpRequest();
 				xhr.open("GET", url, true);
 				xhr.onreadystatechange = function() {
@@ -776,6 +793,8 @@ function jsPostMessage(){
 					setMessage[i].addEventListener("click", function(e){
 					e.preventDefault();
 					
+                    
+
 					//verificando valor do input tex
 					//alert(this.id);
 					
@@ -783,12 +802,15 @@ function jsPostMessage(){
 					let message = this.id.split("-");//separando [id]
 					//alert(message[1].trim());
 					let getBoxMgs =  document.getElementById("msg-"+message[1].trim());
-					
+					let userDestinacao = document.getElementById("userdestinacao-"+message[1].trim());//para quem a menssagem é enviada
+					//alert("->"+userDestinacao.value);
+
+
 					let getMsgTex =  document.getElementById("input-message-"+message[1].trim());
 					//alert(getMsgTex.value);
 					if( getMsgTex.value != ""){
 					  
-						let html = " <img src='<?php print $dados["user_photo_perfil_blob"]; ?>' "+
+						let html = " <img src='../images/users/pequena_<?php print $dados["user_photo_perfil"]; ?>' "+
 										 "class='user-image-profile-feed-message'>"+
 										 "<b><?php print  $dados["user_name"]; ?></b> "+
 										 " "+getMsgTex.value+" ";
@@ -796,7 +818,8 @@ function jsPostMessage(){
 										   getBoxMgs.innerHTML = html;
 
 										  //gravando os comentarios
-										let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print  $_SESSION['user_id'];?>';
+										
+										  let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&userdestinacao='+userDestinacao.value+'&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print  $_SESSION['user_id'];?>';
 										let xhr = new XMLHttpRequest();
 										xhr.open("GET", url, true);
 										xhr.onreadystatechange = function() {
@@ -808,7 +831,7 @@ function jsPostMessage(){
 													
 												}
 											}
-											xhr.send();
+											xhr.send(); 
 					   }
 
 					});
@@ -920,7 +943,7 @@ function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se poss
 			    
 			
 			<div class="container-message-left">
-				    <img src='<?php print $dados["user_photo_perfil_blob"]; ?>' class='user-image-profile-feed-message'>
+				    <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>" class='user-image-profile-feed-message'>
 			        <div class="container-message-rigth">
 				   <?php
 				      print "<span class='msg-user-neme-text-name'>
@@ -1009,6 +1032,257 @@ function searcUse(){
 }
 
 
+function cropperImage(){
+ 
+	$mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+		session_start(); 
+		$sql = "SELECT * FROM user_new_post 
+		WHERE user_new_post_user_id = ".$_SESSION['user_id']." ";
+	
+				  
+		$query = $mysqli->query($sql);
+		$numRows =  $query->num_rows;//número de linhas
+		
+		 $dados = $query->fetch_assoc();
+
+		 //abrindo apenas uma imagem
+
+		 //style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>');"
+		 ?>
+		    <div class="box-geral-img" >
+                 <img src="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
+				 <input type="hidden" id="imagefile" value="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
+
+		   <div class="select-area-image" id="select-area-image">
+           </div>	
+			</div>
+            <span id="infos"></span>
+
+			<a href="requisicoesajax.php.php?page=cropperimage" id="croppar">
+              [ cropper ]    
+		   </a>
+
+
+           <script>
+			 let elementMove = document.getElementById("select-area-image");
+			 let info = document.getElementById("infos");
+			 
+			 let mLeft =  0;//inicializo
+			 let mTop =   0;//inicializo
+
+			 infos.innerText = 'Touch ends [top:'+mTop+' ] [left:'+mLeft+' ]';
+			 
+			 elementMove.addEventListener('touchstart', function(e) {
+					infos.innerText = 'Touch begins';
+				});
+
+				elementMove.addEventListener('touchend', function(e) {
+					elementMove
+					
+					mLeft = parseInt(elementMove.style.left);
+					mTop = parseInt(elementMove.style.top);	
+					infos.innerText = 'Touch ends [top:'+mTop+' ] [left:'+mLeft+' ]';
+	                		
+				});
+                
+				let Ox = 1;
+				
+				elementMove.addEventListener('touchmove', function(e) {
+
+					             ox = Math.round( e.touches[0].clientX -100);
+                                 oy = Math.round( e.touches[0].clientY -100);
+
+					            var x = Math.round( e.touches[0].clientX -100)+"px";
+								var y = Math.round(e.touches[0].clientY - 100)+"px";
+
+								if(ox  > 0 && ox < 235){
+									this.style.left = x  ;
+ 								   
+
+								}if(oy  > 0 && oy < 180){
+								    this.style.top =  y  ;//100 é a distancoa do topo
+								}
+								infos.innerHTML = "x:"+x+" "+y+" ";
+
+
+				});
+
+
+			 /*
+			 var touchElement = document.getElementById('select-area-image');
+             var outputElement = document.getElementById('output');
+             
+			 function mousedown(){
+
+			 move.addEventListener("mousemove", mousemove);
+			 move.addEventListener("mouseup", mouseup);
+
+			  function mousemove(e){
+						        var x = e.clientX-100+"px";
+								var y = e.clientY-100+"px";
+								this.style.left = x ;
+								this.style.top = y ;
+
+                                
+								let infos = document.getElementById("infos");
+								    infos.innerHTML = "x:"+e.clientX+" , y:"+e.clientY+"";
+
+					}
+
+
+					function mouseup(){
+					   move.removeEventListener("mousemove", mousemove);
+					}
+                
+				
+			  }
+			   */
+			  
+				
+                    
+					
+               
+				  
+			 
+              /*
+			 move.addEventListener("mouseup", function(){
+                move.removeEventListener("mousemove", mousemove);
+					
+                });*/
+                
+				let imgsrc = document.getElementById("imagefile").value;
+            
+				let croppar = document.getElementById("croppar");
+				croppar.addEventListener("click", function(e){
+					e.preventDefault();
+                    //alert("Licou");
+					let url = 'requisicoesajax.php?page=editimagecropper&src='+imgsrc+'&left='+mLeft+'&top='+mTop+'';
+						 let xhr = new XMLHttpRequest();
+						 xhr.open("GET", url, true);
+						 xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4) {
+								if (xhr.status = 200)
+									//console.log(xhr.responseText);
+									info.innerHTML = "->>"+xhr.responseText; //tras os resultados
+									//setando o novo icone de like vermelho like
+									
+								}
+							}
+							xhr.send();
+
+				});
+
+
+
+		   </script>
+
+		 <?php
+		
+
+	
+
+}
+
+
+
+function notification(){
+	
+	    $mysqli = conectar();
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+		session_start(); 
+
+		$sql = "SELECT * FROM notifications, user 
+		        WHERE   user_id = notifications_user_id
+				AND notifications_user_id = ".$_SESSION['user_id']."
+				ORDER BY notifications_id DESC
+				LIMIT 30 ";
+	
+				  
+			$query = $mysqli->query($sql);
+			$numRows =  $query->num_rows;//número de linhas
+			
+
+             ?>
+			  <div class="box-geral-notifications">
+				<div class="title-notifications">Últimas Notificações</div>
+			 <?php
+					while (    $dados = $query->fetch_assoc()  )
+					{
+						
+
+						$sql1 = "SELECT * FROM  user 
+						WHERE   user_id = ".$dados["notification_sender_id"]."";
+			
+						
+						$query1 = $mysqli->query($sql1);
+						//$numRows =  $query1->num_rows;//número de linhas
+						$dados1 = $query1->fetch_assoc();
+
+						?>
+						<div class="notification-lines">
+								<div>
+									<img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="img-user-notification-icon" >
+								    <b><?php print $dados1["user_name"]; ?></b>&nbsp 
+									<?php print $dados["notifications_description"]; ?>
+									: <?php print $dados["notifications_text"]; ?>
+					            </div>
+								<div>
+									<?php 
+									   print separarData($dados["notifications_date"]). " 
+									   <br>as ".separarHora($dados["notifications_date"]);  
+									?>
+								</div>
+					    </div>
+
+						<?php
+						
+
+					}//fecha while fetch_assoc()
+
+
+                  //ATUALIZANDO O STATUS DAS NOTIFICAÇÕES PARA VISTO
+				  $mysqli = conectar();//inicializa conexao
+				if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+					session_start();
+					   $sql = "UPDATE  notifications SET notifications_view = 'yes'
+					                                 WHERE notifications_user_id = ".$_SESSION['user_id'];
+				
+						$query = $mysqli->query($sql);
+						$numRows =  $query->num_rows;//número de linhas
+						
+						
+
+
+
+
+
+				?>
+				</div><!-- fecha div box-geral-notifications-->
+				<?php
+
+}
+
+
+function verificarNotifications($user_id){
+	
+	$mysqli = conectar();//inicializa conexao
+	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+      	session_start();
+	$sql = "SELECT * FROM notifications 
+		             WHERE   notifications_user_id = ".$user_id."
+					 AND notifications_view = 'no' ";
+	
+				  
+			$query = $mysqli->query($sql);
+			$numRows =  $query->num_rows;//número de linhas
+			$dados = $query->fetch_assoc();
+			return $numRows;
+
+            
+}
+
+
 function topMenu(){
 	?>
 	<div class="box-top-menu">
@@ -1033,7 +1307,7 @@ function topMenu(){
 			   	<a href="main.php?page=userLogin">
 					
 					<div class="user-image-profile">
-					   <img src="<?php print $dados["user_photo_perfil_blob"] ;?>" class="user-image-profile-top"> 
+					   <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-top"> 
 					</div>
 				</a>
 
@@ -1049,7 +1323,25 @@ function topMenu(){
 			?>
 		   
 			<div class="rigth-top-menu-itens"> 
-				<div class="top-menu-itens"><img src="../images/layout/svg/notification-icon-01.svg" width="25"></div>
+			<a href="main.php?page=notification">
+				<div class="top-menu-itens">
+					
+					<?php 
+					   $numNotifications =  verificarNotifications( trim($_SESSION['user_id']) );
+					   if($numNotifications > 0){
+                          
+						   ?>
+						     <img src="../images/layout/svg/notifications-actived-icon.svg" width="25">
+							<?php
+							print $numNotifications; 
+					   }else{
+                           ?>
+						     <img src="../images/layout/svg/notification-icon-01.svg" width="25">
+						   <?php
+					   }      
+					 ?>
+				</div>
+			 </a>
 			<a href="main.php?page=settings">
 				<div class="top-menu-itens"><img src="../images/layout/svg/settings-icon-01.svg" width="25"></div>
 			</a>
@@ -1060,6 +1352,8 @@ function topMenu(){
 		</div>
 	<?php
 }
+
+
 
 
 function footMenu(){

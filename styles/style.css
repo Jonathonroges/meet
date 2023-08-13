@@ -41,6 +41,10 @@ body{
 	gap: 20px;
 	padding-right: 20px;
    }
+   .rigth-top-menu-itens a{
+	text-decoration: none;
+	color: #000000;
+   }
 
    .left-top-menu-itens{
 	display: flex;
@@ -177,6 +181,7 @@ body{
 		color: #FFFFFF;
 		width: 100px;
 		border: none;
+		font-size: 18px;
 	}
 	
 	
@@ -228,7 +233,7 @@ body{
 		margin-left: auto;
 		left: 10px;
 		width: 97px;
-		height: 97px;
+		
 	    /*border: 1px solid #e6ad11;*/
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
@@ -275,6 +280,12 @@ body{
 		flex-direction: column;
 		padding: 16px;
 	}
+	.new-post-text{
+		position: relative;
+		font-size: 18px;
+		padding: 4px;
+		width: 100%;
+	}
 
 	/*Estilizando lista de postagens do usuario - tela profile*/
 	.box-post-list{
@@ -293,6 +304,7 @@ body{
 		width: 120px;
 		/*border: 1px solid #E7E7E7;*/
 		background-position: center;
+		
 		background-repeat: no-repeat;
 		
 	}
@@ -341,7 +353,7 @@ body{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
 		width: 70px;
-		height: 70px;
+		
 	}
 
 
@@ -349,14 +361,14 @@ body{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
 		width: 80px;
-		height: 80px;
+		
 	}
 
 	.user-image-profile-feed{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
 		width: 50px;
-		height: 50px;
+		
 	}
 	/*icone pequeno para post de mensagens(comentarios)*/
 	.user-image-profile-feed-message{
@@ -364,7 +376,7 @@ body{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
 		width: 33px;
-		height: 33px;
+		
 	}
 	.bt-feed-publicar{
 		text-decoration: none;
@@ -585,7 +597,76 @@ body{
 	font-weight: bold;
 	padding-left: 8px;
 }
+/*Teste Cortar imagem*/
 
+.box-geral-img{
+	display: flex;
+	position: relative;
+	width: 90%;
+	height: 300px;
+	border: 1px dotted #f54974;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+.select-area-image{
+	display: flex;
+	flex-direction: row;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100px;
+	height: 100px;
+	border: 2px solid #ffffff;
+	background-color: transparent;
+
+}
+
+/*Notificações*/
+
+
+.title-notifications{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	font-weight: bolder;
+	padding-bottom: 20px;
+}
+
+.box-geral-notifications{
+	font-family: sans-serif;
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+	padding-top: 50px;
+}
+
+.notification-lines{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: start;
+	
+	/*border: 1px solid #f54974;*/
+	padding-bottom: 8px;
+	font-size: 12px;
+}
+
+.notification-lines div{
+	display: flex;
+	justify-content: center;
+	align-items: start;
+	
+	gap: 8px;
+}
+
+.img-user-notification-icon{
+	margin-right: 8px;
+}
+/*Fecha estilo notificações*/
+
+/*Teste Cortar imagem*/
 
 /*}*/
 
