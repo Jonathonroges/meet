@@ -34,6 +34,13 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 
 
    function formCadUser(){
+
+
+	$mysqli = conectar();
+
+	if (!isset($_SESSION))
+		session_start(); 
+
    ?>
    
    <!-- upload files-->
@@ -303,7 +310,12 @@ function alterUser(){
 				 <br>
 				    
 				 <br>
-				 <div id='upload' class='carregar-foto' >Alterar Foto</div>
+                 
+				 <div id="attachment" class="attachment" >
+					Alterar Imagem
+				   <div id='upload' class='carregar-foto' ></div>
+				 </div>
+
 				 <span id="status" ></span>
 				 <br>
 				 <input type="text" id="userName" name="userName" value="<?php print $dados["user_name"]; ?>"  ><br>
@@ -358,38 +370,84 @@ function newPost(){
 	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
 	    session_start(); 
 
+		$sql = "SELECT * FROM user
+		                 WHERE user_id = ".$_SESSION['user_id']."";//$user_id , $_SESSION['user_id']
+		
+	 
+		$query = $mysqli->query($sql);
+		$numRows =  $query->num_rows;//número de linhas
+
+		$dados = $query->fetch_assoc();
+
       ?>
 
 		<!--import para cortar imagem -->
 		
 	  <div class="box-new-post">
-	        <b>Nova Publicação</b> <br>
-			<form action="main.php?page=setnewpostuser" method="POST">
+	        <br><b>Nova Publicação</b> <br>
+			<form action="main.php?page=setnewpostuser" method="POST" id="form-new-post" enctype="multipart/form-data">
+
+			        <?php print $dados["user_name"]; ?> 
+			        <textarea id="new-post-text"  
+					          name="new-post-text"
+							  class="new-post-text" 
+							  maxlength ="500"
+							  >O que está rolando?</textarea> 
+
 					<div class='files' id="files">
-						<img src="../images/layout/default-image-post.jpg" id="img-arquivo" value="">
-						   
+						<!--<img src="../images/layout/default-image-post.jpg" id="img-arquivo" value="">-->
 					</div>
                     <!-- Armazena a imagem em blob no banco de dados-->
 					<input type='hidden' id='blob-image' name='blob-image' value=''>
-
-					<div id='upload' class='carregar-foto' >carregar imagem</div>
-								<span id="status" ></span>
-								<p>
-								<input type="text" 
-								       id="new-post-text" 
-									   name="new-post-text"
-								       class="new-post-text"  
-									   maxlength ="500"
-									   placeholder="Legenda">
-								<br>
-								<br><br>
-				
+					<span id="status" ></span>
+					<div id="attachment" class="attachment">
+					   <div id='upload' class='carregar-foto' ></div>
+                     </div>  
 					   
-                    		
-					<input type="submit" value="postar" name="opc" id="bt-enviar-cad-user" >
+						<input type="submit" value="postar" name="opc" id="bt-enviar-cad-user" >
 			</form>
+
+
             <script>
+
+                 const textAreaPost = document.getElementById("new-post-text");
+				 const btPostar = document.getElementById("bt-enviar-cad-user");
+				 const formNewPost = document.getElementById("form-new-post");
+				 
+				 
+				      // textAreaPost.focus();//seta o foco no elemento textArea
+
 				
+                 
+				 textAreaPost.addEventListener("focus", function(e){
+                   // alert(textAreaPost.value);
+					if(textAreaPost.value =="O que está rolando?"){
+						textAreaPost.value = "";
+					}
+				});
+
+				textAreaPost.addEventListener("blur", function(e){
+					if(textAreaPost.value ==""){
+						textAreaPost.value = "O que está rolando?";
+					}
+				});
+
+               //validando momento de postaGEM
+			   btPostar.addEventListener("click", function(e){
+
+				    e.preventDefault();
+
+					if(textAreaPost.value == "O que está rolando?" || textAreaPost.value == ""){
+						//alert("Digite algo");
+						document.getElementById("status").innerHTML = "<b>Digite algo</b>";
+
+						textAreaPost.focus();
+					}else{
+						formNewPost.submit();//Executa o submite
+					}
+				});
+
+
 
 			</script>
 
@@ -465,7 +523,7 @@ function openUserPost($user_id, $post_id){
 							</div>
                             <!--like icon -->
 							<div class="user-iten-bt-like">
-					           <img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
+							 &nbspcurtidas  
 	                        </div>
                             <?php
 							//numero de curtidas
@@ -943,8 +1001,16 @@ function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se poss
 			    
 			
 			<div class="container-message-left">
-				    <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>" class='user-image-profile-feed-message'>
-			        <div class="container-message-rigth">
+				    
+			
+			     
+				 <div class="box-round-img-user"
+					style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>');" >	
+				<div class="layer-roud-white-img-user-icon"></div>
+				
+			</div>  
+					
+					<div class="container-message-rigth">
 				   <?php
 				      print "<span class='msg-user-neme-text-name'>
 					            ".$dados["user_name"]."
@@ -1221,9 +1287,14 @@ function notification(){
 
 						?>
 						<div class="notification-lines">
-								<div>
-									<img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="img-user-notification-icon" >
-								    <b><?php print $dados1["user_name"]; ?></b>&nbsp 
+								<div class=notifications-right-itens>
+								  
+								  <div class="box-round-img-user"
+								      style="background-image: url('../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>');" >	
+								      <div class="layer-roud-white-img-user-icon"></div>
+					              </div> 
+
+									<b><br><?php print $dados1["user_name"]; ?></b>&nbsp 
 									<?php print $dados["notifications_description"]; ?>
 									: <?php print $dados["notifications_text"]; ?>
 					            </div>
@@ -1368,9 +1439,7 @@ function footMenu(){
 			<a href="main.php?page=newpost">
 				<div class="foot-menu-itens"><img src="../images/layout/svg/new-post-icon.svg" width="25"></div>
             </a>	
-			<a href="main.php?page=configuration">
-				<div class="foot-menu-itens"><img src="../images/layout/svg/more-finfo-icon-01.svg" width="25"></div>
-            </a>
+			
     </div>
 	<?php
 }

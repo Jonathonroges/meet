@@ -94,7 +94,7 @@ body{
 		border: 0px;
 		background-color: #000000;
 		color: #FFFFFF;
-		background-image: url("../images/layout/photo-icon-01.png");
+		
 		background-repeat: no-repeat;
 		background-position: 8px 8px;
 		padding: 12px;
@@ -285,6 +285,11 @@ body{
 		font-size: 18px;
 		padding: 4px;
 		width: 100%;
+		font-size: 14px;
+		color: #aaaaaa;
+		outline: none;
+		border: none;
+		
 	}
 
 	/*Estilizando lista de postagens do usuario - tela profile*/
@@ -646,25 +651,65 @@ body{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: start;
+	align-items: center;
 	
 	/*border: 1px solid #f54974;*/
 	padding-bottom: 8px;
 	font-size: 12px;
 }
+.notification-lines img{
+	float: left;
+}
 
-.notification-lines div{
-	display: flex;
-	justify-content: center;
-	align-items: start;
+.notifications-right-itens{
+	display: block;
 	
-	gap: 8px;
+	
 }
 
 .img-user-notification-icon{
 	margin-right: 8px;
 }
 /*Fecha estilo notificações*/
+
+
+.attachment #upload{
+	/*border: 1px solid #f54974;*/
+	background-color: #FFFFFF;
+	background-image: url("../images/layout/svg/attachment-01-inactive.svg");
+	background-size: 26px;
+	background-size: 26px 26px;
+	background-repeat: no-repeat;
+	background-position: -1px 12px;
+	padding: 8px;
+	padding-left: 0px;
+	width: 30px;
+	height: 30px;
+	margin-bottom: 20px;
+	
+}
+.box-round-img-user{
+	display: block;
+	float: left;
+	position: relative;
+	border: 0px solid #ffd8d8;
+	width: 41px;
+	height: 40px;
+	background-position: 1.5px 1.5px;
+	background-repeat: no-repeat;
+	margin-right: 12px;
+
+}
+.layer-roud-white-img-user-icon{
+	position: absolute;
+	border: 1px solid #ffffff;
+	background-image: url("../images/layout/moldure-profile-media-01.png");
+	background-size: 41px 41px;
+	width: 41px;
+	height: 41px;
+	background-position: 0px 0px;
+}
+
 
 /*Teste Cortar imagem*/
 

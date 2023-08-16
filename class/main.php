@@ -239,7 +239,7 @@
 							
 
 							
-							if (isset($_SESSION)){ //necessário inicializar sessão sempre que uma página nova é criada
+							if (isset($_SESSION) && isset($_SESSION['user_id']) ){ //necessário inicializar sessão sempre que uma página nova é criada
 							
 							topMenu();//desenha o topo    
 							footMenu();//Desenha o footMenu	
