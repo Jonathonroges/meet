@@ -46,16 +46,24 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
    <!-- upload files-->
 
   <div class="box-cad-user">
+	   
 	  <div class="container-user">
-   <form action="main.php?page=cadUser" method="POST">
+   <form action="main.php?page=cadUser" method="POST" id="form-cadastro-user">
 	   
 	   
-			<BR>CADASTRO<BR>
+			<BR>NOVO CADASTRO<BR>
+			
 		   <div class='files'></div>
-			<div id="upload" class="carregar-foto" >Carregar Foto</div>
+		    <div id="attachment" class="attachment">
+			    <div id='upload' class='carregar-foto' ></div>
+            </div> 
+			
 			<span id="status" ></span>
 			<br>
-			<input type="text" id="userName" name="userName" placeholder="Nome" ><br>
+			<input type="text" id="userName" name="userName" placeholder="Nome de usuário" maxlength="25" ><br>
+			<input type="hidden" id="user-tag-name" name="user-tag-name" value="false"/>
+			<input type="hidden" id="tag-name" name="tag-name" value=""/>
+			<span id="result-user-name"></span>
 			<br>
 			<input type="password" id="userPassword" name="userPassword" placeholder="senha" ><br>
 			<br>
@@ -71,11 +79,18 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 			<input type="text" id="userEmail" name="userEmail" placeholder="email"><br>
 			<br>
 			<textarea  id="userBio" name="userBio"
-              rows="5" cols="33"  maxlength ="150">Digite algo sobre você
-            </textarea><br><br>
+              rows="5" cols="33"  maxlength ="150">Digite algo sobre você</textarea><br><br>
 			<input type="submit" value="gravar" name="opc" id="bt-enviar-cad-user" >
    </form>
 	  </div><!--container-user -->
+	      <div class="box-guia-modal-cad-user" id="box-guia-modal-cad-user">
+			<div class="info-text-modal" id="info-text-modal">
+				Te guiaremos nessa etapa<br>
+				Vamos começar?
+			</div>
+		   <div class="close-modal" id="close-modal">[fechar]</div>
+         </div><!--box-guia-modal-cad-user -->
+
  </div>	<!--box-cad-user -->
 
 <!-- Ações javaScript-->
@@ -83,6 +98,172 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
  <script type="text/javascript">
 	    $("#userBirthday").mask("99/99/9999");
 		$("#userPhone").mask("(99) 99999-9999");
+     
+		//pegando o objeto form
+		let formCadastro = document.getElementById("form-cadastro-user");
+		let btEnviar = document.getElementById("bt-enviar-cad-user");
+		let userNameResult = document.getElementById("result-user-name");
+		let userNameEditText = document.getElementById("userName");
+		let userTagNameValida = document.getElementById("user-tag-name");//para saber se valida = true, ou false
+		let tagName = document.getElementById("tag-name");
+		let userPassword = document.getElementById("userPassword");
+		let userBirthday = document.getElementById("userBirthday");
+		let userPhone = document.getElementById("userPhone");
+		let userEmail = document.getElementById("userEmail");
+		let textAreaBio = document.getElementById("userBio");
+		let boxModalInfo = document.getElementById("box-guia-modal-cad-user");
+		let closeModal = document.getElementById("close-modal");
+		let infoTextModal = document.getElementById("info-text-modal");
+		
+		let valida = true;
+		
+
+
+		let trataNome;
+		
+		userNameEditText.addEventListener("keyup", function(){
+			  
+			 
+			 /* 
+			  for(let i=0; i< this.value.length; i++ ){
+				trataNome+=trataNome[i];
+			  }*/
+			 
+			  
+		});
+
+		userNameEditText.addEventListener("blur", function(e){
+			  let trataNome = userNameEditText.value.replace(/ /g, ""); 
+			  trataNome = trataNome.toLowerCase();
+              
+			   //pesquisando no banco de dados se já existe algum usuario com esse userName
+			   let url = 'requisicoesajax.php?page=validausertagname&tagname='+trataNome+'';
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", url, true);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState == 4) {
+						if (xhr.status = 200)
+							//console.log(xhr.responseText);
+							userNameResult.innerHTML = xhr.responseText;
+							if(xhr.responseText == "1" ){
+								boxModalInfo.style.visibility = "visible";
+								infoTextModal.innerHTML = "Usuario "+trataNome+" já existe! Tente outro";
+								userTagNameValida.value = "false";//seta o input para false para não deixar cadastrar usuarios com registros iguais
+								valida = false;
+								//userNameEditText.focus();
+								
+							}else{
+								
+								userTagNameValida.value = "true";//usuario válido
+								boxModalInfo.style.visibility = "visible";
+								infoTextModal.innerHTML = "Seu nome de usuario será "+trataNome+"";
+								userNameResult.innerHTML = "usuario <b>@"+trataNome+"</b>";
+								tagName.value = trataNome;
+							}
+							if(trataNome.length < 4 || trataNome == ""){//não digitou
+								userTagNameValida.value = "false";//seta o input para false para não deixar cadastrar usuarios com registros iguais
+								valida = false;
+								userNameEditText.focus();
+							}
+							//alert(xhr.responseText);
+							  
+						}
+					}
+					xhr.send();
+             
+
+			});
+           //fecha janelinha modal
+			closeModal.addEventListener("click", function(e){
+						e.preventDefault();//remove
+						boxModalInfo.style.visibility = "hidden";
+						
+				
+			});
+
+
+		
+		btEnviar.addEventListener("click", function(e){
+						e.preventDefault();//remove
+						
+                        valida = true;
+
+                        if(userTagNameValida.value == "false"){
+							
+							boxModalInfo.style.visibility = "visible";
+							infoTextModal.innerHTML = "Nome de usuário não informado ou invalido";
+							userNameEditText.focus();
+							valida = false;
+
+						}else if(userPassword.value.length < 6){
+							
+							boxModalInfo.style.visibility = "visible";
+							infoTextModal.innerHTML = "Password de, no mínimo, 6 caracteres!";
+							userPassword.focus();
+							valida = false;
+						}
+						if(userBirthday.value == ""){
+							
+							boxModalInfo.style.visibility = "visible";
+							infoTextModal.innerHTML = "Data de nascimento vazio!";
+							userBirthday.focus();
+							valida = false;
+
+						}if(userPhone.value == ""){
+							
+							boxModalInfo.style.visibility = "visible";
+							infoTextModal.innerHTML = "Telefone vazio!";
+							userPhone.focus();
+							valida = false;
+						
+						}if(userEmail.value == ""){
+							
+							boxModalInfo.style.visibility = "visible";
+							infoTextModal.innerHTML ="Email vazio!";
+							userEmail.focus();
+							valida = false;
+						
+						}if(textAreaBio.value =="Digite algo sobre você" || textAreaBio.value ==""){
+							
+							boxModalInfo.style.visibility = "visible";
+							infoTextModal.innerHTML ="Digite algo sobre você!";
+							textAreaBio.focus();
+							valida = false;
+
+						}
+                        //não há nada de errado nos if´s
+						if(valida){
+							//finalmente, executa o submite
+							formCadastro.submit();
+						} 
+						
+                       
+        });
+
+	             //tratando o textArea
+	            textAreaBio.addEventListener("focus", function(e){
+                   // alert(textAreaPost.value);
+					if(textAreaBio.value =="Digite algo sobre você"){
+					   textAreaBio.value = "";
+					}
+				});
+
+                textAreaBio.addEventListener("blur", function(e){
+					alert("->"+textAreaPost.value+"<-")
+					/*if(textAreaPost.value ==""){
+						textAreaBio.value = "Digite algo sobre você?";
+						textAreaBio.focus();
+					}*/
+				});
+
+
+
+				
+
+
+
+
+
 		
 </script>
 
@@ -193,24 +374,75 @@ function areaUser( $userId ){
                         
 				        <div class="box-info-tex-profile">
 							<br><br>
-						    <span class="text-info-name"> <?php print $dados["user_name"];  ?></span><br>
-							<span class="text-info-bio">  <?php print $dados["user_bio"];  ?></span>	
-						</div>
+						        <span class="text-info-name"> <?php print $dados["user_name"];  ?></span><br>
+							                          <?php print "@".$dados["user_tagname"];  ?><br>
+							    <span class="text-info-bio">  <?php print $dados["user_bio"];  ?></span>	
+						
 
+                            <!-- Área de localização-->
+                            <?php
+										//selecionando usuario local - SESSION
+										$sql1 = "SELECT * FROM user WHERE 	user_id = ".$_SESSION['user_id']." ";
+										$query1 = $mysqli->query($sql1);
+										$numRows =  $query1->num_rows;//número de linhas
+										$dados1 = $query1->fetch_assoc() ;
+
+
+										$lat1 = $dados1["user_latitude"];;
+										$lon1 = $dados1["user_longitude"];
+										$lat2 = $dados["user_latitude"];
+										$lon2 = $dados["user_longitude"];
+
+										$lat1 = deg2rad($lat1);
+										$lat2 = deg2rad($lat2);
+										$lon1 = deg2rad($lon1);
+										$lon2 = deg2rad($lon2);
+								
+										$dist = (6371 * acos(cos($lat1) * cos($lat2) * cos($lon2 - $lon1) + sin($lat1) * sin($lat2)));
+										print "
+										<br><b>
+										<img src='../images/layout/svg/location-2-icon-inactive.svg' width='15'>
+										Está a ".number_format($dist, 1, '.', '')." Km</b>";//quilometros
+						    ?>
+						</div><!--fecha box-info-tex-profile -->
+
+
+
+
+
+						<?php
+						if(file_exists("../images/users/".$dados["user_new_post_image"])){
+						?>
 						<div class="box-moldura-profile" >
 						        <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile"> 
 								
 						</div>
+                        <?php
+
+                        
+
+						}//fecha if file_exists
+						?>
+
+
 	             </div>	
-				 
-				 <div class="box-action-profile">
-					   <a href="main.php?page=alteruser&id=<?php print $_SESSION['user_id'];?>" class="box-bt">
-						  <span>editar perfil</span>
-					  </a>
-					  <a href="main.php?page=newpost" class="box-bt">
-						 <span>publicar</span>
-	                  </a>
-	             </div>
+				  
+            
+                <?php
+				//só mostra os botoes de alterar e postar se o usuario logado for o mesmo da sessão
+				 if(trim($dados["user_id"]) === trim($_SESSION['user_id'])){
+                ?>
+						<div class="box-action-profile">
+							<a href="main.php?page=alteruser&id=<?php print $_SESSION['user_id'];?>" class="box-bt">
+								<span>editar perfil</span>
+							</a>
+							<a href="main.php?page=newpost" class="box-bt">
+								<span>publicar</span>
+							</a>
+						</div>
+				<?php
+				}//fim do if
+				?>		
                   
              <?php
               
@@ -222,19 +454,28 @@ function areaUser( $userId ){
 				$query = $mysqli->query($sql);
 				$numRows =  $query->num_rows;//número de linhas
 				
-				print "<div class='box-post-list'>";
+				print "
+				       
+				       <div class='box-post-list' id='box-post-list'>";
 						while (    $dados = $query->fetch_assoc()  ) {
 						
                               ?>
-							      <a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>">
-								    <div style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>');" class="box-iten-post" >
-										 
+							    <a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>">
+								    
+								<?php
+								   if(file_exists("../images/users/media_".$dados["user_new_post_image"])){
+								?>
+								      <div style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>');" class="box-iten-post" >
+								      </div><!--fim div box-iten-post -->
+								<?php
+								   }//fim do if file_exists 
+								?>	 
 							             
-							        </div>
-						          </a>
+							        
+						        </a>
 							 <?php
 						}
-				print "</div>";
+				print "</div><!--fecha div box-post-list -->";
 
 
 
@@ -248,7 +489,90 @@ function areaUser( $userId ){
 	 }else{
 		//print "USUÁRIO OU SENHA NÃO ENCONTRADOS";
 	 }
+      ?>
+		<script>
+         //distribuindo itens (fotos com largura proporcionalmente)
+		 
+	
+		 let getWidthContainer = document.getElementById("box-post-list");
+		 let get_w;
 
+		 resizeImages();
+
+         window.addEventListener("resize", function(e){
+		      
+			resizeImages();
+			//result.innerHTML =  ">>>>"+(limpaNumero/3)+"<<<<<" ;
+		});
+		
+        function resizeImages(){//redimencionando imagens para assumirem largura da view
+			var w =   window.getComputedStyle(getWidthContainer).width;
+                var list = document.querySelectorAll(".box-iten-post");
+                var  subdivide;//para saber em quanto devo dividir as iamgens na tela
+				if(list.length<=1){
+					subdivide = 1;
+				}else if(list.length == 2){
+					subdivide = 2
+				}else{
+					subdivide = 3;
+				}
+ 
+
+			        for(var i=0; i < list.length; i++){
+						let limpaNumero = w.substring(0,w.length-2);
+						list[i].style.width = ''+((limpaNumero)/subdivide).toFixed(2)+'';
+						list[i].style.height = ''+((limpaNumero)/subdivide).toFixed(2)+'';
+					}
+		}
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+			//pegando geolocalização
+			if("geolocation" in navigator){
+				
+                navigator.geolocation.getCurrentPosition(function(position){
+                  
+                   // console.log("Latitude:"+position.coords.latitude+" <br>longitude"+position.coords.longitude);
+                    
+					let url = 'requisicoesajax.php?page=setcoordenadas&latitude='+position.coords.latitude+'&longitude='+position.coords.longitude+'';
+					let xhr = new XMLHttpRequest();
+					xhr.open("GET", url, true);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == 4) {
+							if (xhr.status = 200)
+								console.log(xhr.responseText);
+								//setando o novo icone de like vermelho like
+								let setActiveLike = document.getElementById("like-"+likeId[1]);
+									setActiveLike.innerHTML = " <img src='../images/layout/svg/heart-like-icon-active.svg' width='25' style='padding-left:20px;'>";
+							}
+						}
+						xhr.send();
+
+                     //console.log(position);
+            
+
+				 }, function(error){
+					alert(error);
+				});
+
+
+			}else{
+				alert("ops! geolocalização nao possivel")
+			}
+		</script>
+
+
+    <?php
 
 
 }
@@ -387,7 +711,7 @@ function newPost(){
 	        <br><b>Nova Publicação</b> <br>
 			<form action="main.php?page=setnewpostuser" method="POST" id="form-new-post" enctype="multipart/form-data">
 
-			        <?php print $dados["user_name"]; ?> 
+			        <?php print $dados["user_tagname"]; ?> 
 			        <textarea id="new-post-text"  
 					          name="new-post-text"
 							  class="new-post-text" 
@@ -478,9 +802,17 @@ function openUserPost($user_id, $post_id){
 	while (    $dados = $query->fetch_assoc()  ) {
 	 ?>
 	   <div class="box-user-post-item">
-		   <div class="box-image-user-post-item">
-		      <image  src="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
-	       </div>
+		   
+		    <?php
+			   if(file_exists("../images/users/".$dados["user_new_post_image"])){
+			?>
+	            <div class="box-image-user-post-item">
+		          <image  src="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
+	            </div>
+
+			<?php
+			   }//fim do file_exists
+			?>	
 
 		   <?php 
 		    if($dados["user_new_post_user_id"] == $_SESSION['user_id'])
@@ -519,7 +851,7 @@ function openUserPost($user_id, $post_id){
 							    <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile">
 							</div>
 							<div class="box-info-text-left-profile">
-								<?php print $dados["user_name"] ;?>
+								<?php print $dados["user_tagname"] ;?>
 							</div>
                             <!--like icon -->
 							<div class="user-iten-bt-like">
@@ -634,6 +966,10 @@ function feeds(){
 	$query = $mysqli->query($sql);
 	$numRows =  $query->num_rows;//número de linhas
 	
+    ?>
+	<?php
+
+
 	while (    $dados = $query->fetch_assoc()  ) {
 
 		
@@ -643,147 +979,180 @@ function feeds(){
 				$gerenciarPost = false;
 			   }
 		
+        
+
 		$userCreatePost = $dados["user_new_post_user_id"];//quem criu o post
 
 	 ?>
-	   <div class="feed-box-user-post-item">
+          
+         
+         
+	    <div class="feed-box-user-post-item">
+
+		
+
 		   
-			<a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
-			<div class="box-image-user-post-item">
-				<image src="../images/users/media_<?php print $dados["user_new_post_image"] ;?>">
-			</div>
-			</a>
-
-		   <div class="box-info-user-post">
-			
-				<div class="profile-info-left"> 
-							<div> 
-							   <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed"> 
-							</div>
-							<div class="box-info-text-left-profile">
-								<?php print $dados["user_name"] ;?>
-							</div>
-                            <!--like icon -->
-
-							<?php
-
-							    
-								$sql1 = "SELECT  * FROM likes
-								WHERE like_user_id = ".trim($_SESSION['user_id'])."
-								AND 
-								like_post_id = ".$dados["user_new_post_id"]." ";
-								$query1 = $mysqli->query($sql1);
-								$numRows =  $query1->num_rows;//número de linhas
-								if($numRows >= 1){
-                                   
-									//já deu like
-									?>
-								<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
-								    <img src="../images/layout/svg/heart-like-icon-active.svg" width="25" style="padding-left:20px;">  
-								</div>
-
-								
-							    <?php
-
-								}else{
-							?>
-								<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
-								<img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
-								</div>
-                                
-								
-							<?php
-							}
+						<a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
 						
-							//numero de curtidas
-							$sql2 =   "SELECT  * FROM likes
-									   WHERE like_post_id = ".$dados["user_new_post_id"]." ";
-									   $query2 = $mysqli->query($sql2);
-									   $numLikes =  $query2->num_rows;//número de linhas
-									   print "".$numLikes;
-							?>
-                            <!--PARA CAPTURAR USUARIO DO LIKE -->
-							<input type="hidden" id="likeuserdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>" >
+						<?php
+						if(file_exists("../images/users/media_".$dados["user_new_post_image"])){
+						?>
 							
-							
-							
-							<div class="user-iten-bt-msg" id="message-<?php print $dados["user_new_post_id"]; ?>">
-					           <img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
-	                        </div>
-
-							<?php
-								$sql3 =   "SELECT  * FROM post_message
-										WHERE message_post_id = ".$dados["user_new_post_id"]." ";
-										$query3 = $mysqli->query($sql3);
-										$numMsg =  $query3->num_rows;//número de linhas
-										print "&nbsp;&nbsp;".$numMsg;
-							?>
+							<div class="box-image-user-post-item">
+								<image src="../images/users/<?php print $dados["user_new_post_image"];?>">
+							</div>
 						
-				</div>	
+						<?php
+						}//fim defile_exists 
+						?>
 					
-				
-					<div class="post-item-info-rigth">
-					    <img src="../images/layout/svg/calendar-icon-01.svg" width="25" >
-						<?php print separarData($dados["user_new_post_date"]) ;?>
-					</div>
-				</div>
+					</a>
 
-            
-			<div class="post-item-description">
-				       <?php print $dados["user_new_post_description"];?>
-			</div><!--post-item-description-->
-			<!--Comentarios -->
-            <?php
-			//buscando foto de usuario logado
-			 $sql = "SELECT * FROM user
-			         WHERE user_id = ".$_SESSION['user_id']."";
+					<div class="box-info-user-post">
+						
+							<div class="profile-info-left"> 
+										<a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">
+											<div> 
+											<img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed"> 
+											</div>
+										</a>		
+										
+											<div class="box-info-text-left-profile">
+												<?php print $dados["user_tagname"] ;?>
+											</div>
+										<!--like icon -->
 
-		  
-			$query3 = $mysqli->query($sql);
-			$numRows =  $query3->num_rows;//número de linhas
-            $dados1 = $query3->fetch_assoc();
-			
-			$userImag = $dados1["user_photo_perfil_blob"];//passa a foto do usuario para um scopo Global
-			$userName = $dados1["user_name"];//passa a foto do usuario para um scopo Global
-			
+										<?php
 
-						?> 
+											
+											$sql1 = "SELECT  * FROM likes
+											WHERE like_user_id = ".trim($_SESSION['user_id'])."
+											AND 
+											like_post_id = ".$dados["user_new_post_id"]." ";
+											$query1 = $mysqli->query($sql1);
+											$numRows =  $query1->num_rows;//número de linhas
+											if($numRows >= 1){
+											
+												//já deu like
+												?>
+											<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
+												<img src="../images/layout/svg/heart-like-icon-active.svg" width="25" style="padding-left:20px;">  
+											</div>
+
+											
+											<?php
+
+											}else{
+										?>
+											<div class="user-iten-bt-like" id="like-<?php print $dados["user_new_post_id"]; ?>">
+											<img src="../images/layout/svg/heart-like-icon-01.svg" width="25" style="padding-left:20px;">  
+											</div>
+											
+											
+										<?php
+										}
+									
+										//numero de curtidas
+										$sql2 =   "SELECT  * FROM likes
+												WHERE like_post_id = ".$dados["user_new_post_id"]." ";
+												$query2 = $mysqli->query($sql2);
+												$numLikes =  $query2->num_rows;//número de linhas
+												print "".$numLikes;
+										?>
+										<!--PARA CAPTURAR USUARIO DO LIKE -->
+										<input type="hidden" id="likeuserdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>" >
+										
+										
+										
+										<div class="user-iten-bt-msg" id="message-<?php print $dados["user_new_post_id"]; ?>">
+										<img src="../images/layout/svg/message-icon-01.svg" width="25" style="padding-left:20px;">  
+										</div>
+
+										<?php
+											$sql3 =   "SELECT  * FROM post_message
+													WHERE message_post_id = ".$dados["user_new_post_id"]." ";
+													$query3 = $mysqli->query($sql3);
+													$numMsg =  $query3->num_rows;//número de linhas
+													print "&nbsp;&nbsp;".$numMsg;
+										?>
+									
+							</div><!-- fecha div profile-info-left-->	
+								
+							
+								<div class="post-item-info-rigth">
+									<img src="../images/layout/svg/calendar-icon-01.svg" width="25" >
+									<?php print separarData($dados["user_new_post_date"]) ;?>
+								</div>
+							</div>
+
+						
+						<div class="post-item-description">
+								<?php print $dados["user_new_post_description"];?>
+						</div><!--post-item-description-->
+						<!--Comentarios -->
+						<?php
+						//buscando foto de usuario logado
+						$sql = "SELECT * FROM user
+								WHERE user_id = ".$_SESSION['user_id']."";
+
+					
+						$query3 = $mysqli->query($sql);
+						$numRows =  $query3->num_rows;//número de linhas
+						$dados1 = $query3->fetch_assoc();
+						
+						$userImag = $dados1["user_photo_perfil_blob"];//passa a foto do usuario para um scopo Global
+						$userName = $dados1["user_name"];//passa a foto do usuario para um scopo Global
+						
+
+									?> 
 
 
 
-			<div class="box-feeds-comentarios">
-				<div class="box-input-text-comentario">
-				    <img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
-					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
-				    <input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
-					<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
-				
-				</div>
-				
-				<!-- Lista de comentarios-->
-				<br>
-				 <span class="title-feeds-messages">Comentarios</span>
-				<br>
-				<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>">
-				</div>
-				<!--lendo lista de mensagens  -->
-				<?php
-                   //função para listar comentarios
-				   listMessages(   $dados["user_new_post_id"] , $gerenciarPost );//gerenciar é true|false para gerenciar os posts relacionados a minha postagem
-                ?>
-			</div>
-
-
-       </div>
+						<div class="box-feeds-comentarios">
+								<div class="box-input-text-comentario">
+									<img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
+									<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
+									<input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
+									<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
+								</div>
+							
+								<!-- Lista de comentarios-->
+								<br>
+								<span class="title-feeds-messages">Comentarios</span>
+								<br>
+								<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>"></div>
+								<!--lendo lista de mensagens  -->
+								<?php
+								//função para listar comentarios
+								listMessages(   $dados["user_new_post_id"] , $gerenciarPost );//gerenciar é true|false para gerenciar os posts relacionados a minha postagem
+								?>
+						</div><!-- fecha div box-feeds-comentarios -->
+        </div><!--feed-box-user-post-item -->
 
    <?php
     
    }//fecha while
      
-   jsPostMessage();//chamo a função para ações javascript das mensagens | adicionar msg | excluir
-   
+  
+
+
+	//saber o ultimo post lido
+	$sql = "SELECT  * FROM user_new_post ORDER BY user_new_post_id DESC LIMIT 10 ";
+	
+				  
+	$query = $mysqli->query($sql);
+	$numRows =  $query->num_rows;//número de linhas
+	$dados = $query->fetch_assoc();
+	//sabendo qual post foi lido por ultimo
+	$_SESSION['user_new_post_id'] = $dados["user_new_post_id"];
+	//print "ultimo post :".$_SESSION['user_new_post_id'];
+
+    jsPostMessage();//chamo a função para ações javascript das mensagens | adicionar msg | excluir
    
 }
+
+
+
 
 
 function jsPostMessage(){
@@ -815,9 +1184,10 @@ function jsPostMessage(){
 	   //RASTREANDOCOMENTARIOS PARA ADICIONA-LO NA POSIÇÃO CERTA
 	let itenLike = document.querySelectorAll('.user-iten-bt-like');
 	
-	for(let i=0; i< itenLike.length; i++ ){
+	//for(let i=0; i< itenLike.length; i++ ){
 
-			itenLike[i].addEventListener("click", function(e){
+		$( "body" ).delegate( ".user-iten-bt-like", "click", function(e){
+			//itenLike[i].addEventListener("click", function(e){
 				//alert(this.id);
 			//pegando apenas o id
 			let likeId = this.id.split("-");
@@ -839,16 +1209,21 @@ function jsPostMessage(){
 					}
 					xhr.send();
 			});
-		}//fecha o for();
+		//}//fecha o for();
 
 
 		/* PERCORRENDO OS COMENTARIOS E ADICIONANDO UM NÓ*/
 	   //RASTREANDO COMENTARIOS PARA ADICIONA-LO NA POSIÇÃO CERTA
 	   let setMessage = document.querySelectorAll('.bt-feed-publicar');
 	   
-	   for(let i=0; i< itenLike.length; i++ ){
+	  // for(let i=0; i< itenLike.length; i++ ){
 					
-					setMessage[i].addEventListener("click", function(e){
+
+		
+
+
+					//setMessage[i].addEventListener("click", function(e){
+				$( "body" ).delegate( ".bt-feed-publicar", "click", function(e){
 					e.preventDefault();
 					
                     
@@ -870,7 +1245,7 @@ function jsPostMessage(){
 					  
 						let html = " <img src='../images/users/pequena_<?php print $dados["user_photo_perfil"]; ?>' "+
 										 "class='user-image-profile-feed-message'>"+
-										 "<b><?php print  $dados["user_name"]; ?></b> "+
+										 "<b><?php print  $dados["user_tagname"]; ?></b> "+
 										 " "+getMsgTex.value+" ";
 										 
 										   getBoxMgs.innerHTML = html;
@@ -894,7 +1269,7 @@ function jsPostMessage(){
 
 					});
 	   
-	   }//fecha o for();
+	  // }//fecha o for();
 </script>
 
 <script>
@@ -902,10 +1277,10 @@ function jsPostMessage(){
 	   //RASTREANDO BUTÃO DE REMOVER COMENTARIOS PARA REMOVE-LOS
 	   let getOptiontMessage = document.querySelectorAll('.container-message-rigth-actions');
 	   
-	   for(let i=0; i< getOptiontMessage.length; i++ ){
+	   //for(let i=0; i< getOptiontMessage.length; i++ ){
 			
-			
-				 getOptiontMessage[i].addEventListener("click", function(e){
+		$( "body" ).delegate( ".container-message-rigth-actions", "click", function(e){
+				 //getOptiontMessage[i].addEventListener("click", function(e){
 				 //e.preventDefault();
 				 let messageId = this.id.split("-");//separando [id]
 				 //alert(messageId[1].trim());
@@ -961,7 +1336,7 @@ function jsPostMessage(){
 			
 				 })
 				 
-		}//fecha for
+		//}//fecha for
 
    </script>
  <?php
@@ -1001,19 +1376,18 @@ function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se poss
 			    
 			
 			<div class="container-message-left">
-				    
-			
-			     
-				 <div class="box-round-img-user"
-					style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>');" >	
-				<div class="layer-roud-white-img-user-icon"></div>
+			    <a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">    
+			        <div class="box-round-img-user"
+					      style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>');" >	
+				          <div class="layer-roud-white-img-user-icon"></div>
 				
-			</div>  
+			        </div>
+		        </a>  
 					
 					<div class="container-message-rigth">
 				   <?php
 				      print "<span class='msg-user-neme-text-name'>
-					            ".$dados["user_name"]."
+					            ".$dados["user_tagname"]."
 					         </span>
 					         ".$dados["message_text"]."
 							 <span class='msg-user-neme-text-date'>
@@ -1286,7 +1660,7 @@ function notification(){
 						$dados1 = $query1->fetch_assoc();
 
 						?>
-						<div class="notification-lines">
+						<div class="notification-lines" id="notificationlines-<?php print $dados["notifications_id"];?>" >
 								<div class=notifications-right-itens>
 								  
 								  <div class="box-round-img-user"
@@ -1296,14 +1670,27 @@ function notification(){
 
 									<b><br><?php print $dados1["user_name"]; ?></b>&nbsp 
 									<?php print $dados["notifications_description"]; ?>
-									: <?php print $dados["notifications_text"]; ?>
-					            </div>
-								<div>
+									: <?php print $dados["notifications_text"]; ?><br>
 									<?php 
 									   print separarData($dados["notifications_date"]). " 
 									   <br>as ".separarHora($dados["notifications_date"]);  
 									?>
+					            </div>
+								<div>
+									
+
+
+
+				                <div class="container-message-rigth-actions" id="mgsid-<?php print $dados["notifications_id"]; ?>" >
+									<img src="../images/layout/svg/more-finfo-icon-01.svg" width="25" >
+									
+									<div class="box-messasge-options-expand" id="messasgeOptionsExpand-<?php print $dados["notifications_id"]; ?>">
+										<img src="../images/layout/svg/remove-01.svg" width="25" >
+									</div>
 								</div>
+
+
+							</div>
 					    </div>
 
 						<?php
@@ -1311,6 +1698,78 @@ function notification(){
 
 					}//fecha while fetch_assoc()
 
+
+                    ?>
+
+					<script>
+					/* PERCORRENDO AS NOTIFICACOES E REMOVENDO*/
+					 //RASTREANDO BUTÃO DE REMOVER NOTIFICACOES PARA REMOVE-LOS
+					 let getOptiontMessage = document.querySelectorAll('.container-message-rigth-actions');
+					 
+					 for(let i=0; i< getOptiontMessage.length; i++ ){
+						  
+						  
+							   getOptiontMessage[i].addEventListener("click", function(e){
+							   //e.preventDefault();
+							   let messageId = this.id.split("-");//separando [id]
+							   //alert(messageId[1].trim());
+							   //removendo visualização
+							   
+							   let messasgeOptionsExpand =  document.getElementById("messasgeOptionsExpand-"+messageId[1].trim() );
+							   let style = window.getComputedStyle(messasgeOptionsExpand);
+								  //alert(style.getPropertyValue('visibility'));
+								  
+								  //escondendo todos os elemento, caso tenha algum abert(visivel)
+								  let getMessageOptionsExpand = document.querySelectorAll('.box-messasge-options-expand');
+									  
+								   
+			  
+								  if(style.getPropertyValue('visibility') === "visible"){//caso esteja visivel, fecha
+									  messasgeOptionsExpand.style.visibility = "hidden";
+								  }else{
+			  
+									  for(let i=0; i< getMessageOptionsExpand.length; i++ ){ 
+										  getMessageOptionsExpand[i].style.visibility = "hidden";
+									  }
+									  messasgeOptionsExpand.style.visibility = "visible";
+								  }
+								  
+								   
+			  
+								  //evento no icone da lixeira
+								  messasgeOptionsExpand.addEventListener("click", function(e){
+									  
+											let getBoxMsg =  document.getElementById("notificationlines-"+messageId[1].trim());
+											  getBoxMsg.innerHTML = "";
+											  messasgeOptionsExpand.style.visibility = "hidden";//esconse o box options
+											  //gravando os comentarios
+											  
+											  let url = 'requisicoesajax.php?page=deletenotification&notificationid='+messageId[1].trim();
+																  let xhr = new XMLHttpRequest();
+																  xhr.open("GET", url, true);
+																  xhr.onreadystatechange = function() {
+																	  if (xhr.readyState == 4) {
+																		  if (xhr.status = 200)
+																			  //console.log(xhr.responseText);
+																			  getMsgTex.value = "";//lempa o texto do input
+																			  //setando o novo icone de like vermelho like
+																			  
+																		  }
+																	  }
+																	  xhr.send();
+											  
+			  
+								  })
+			  
+							   
+						  
+							   })
+							   
+					  }//fecha for
+			  
+				 </script>
+
+               <?php
 
                   //ATUALIZANDO O STATUS DAS NOTIFICAÇÕES PARA VISTO
 				  $mysqli = conectar();//inicializa conexao
@@ -1359,33 +1818,58 @@ function topMenu(){
 	<div class="box-top-menu">
 
 
-	        <div class="left-top-menu-itens">
-			  <?php
-			  $mysqli = conectar();
-			  if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-				  session_start(); 
-			  
-				  $sql = "SELECT * FROM user 
-				  WHERE user_id = ".$_SESSION['user_id']." ";
-			  
-							
-			  $query = $mysqli->query($sql);
-			  $numRows =  $query->num_rows;//número de linhas
-			  
-			  while (    $dados = $query->fetch_assoc()  )
-			   {
-			  ?>
-			   	<a href="main.php?page=userLogin">
-					
-					<div class="user-image-profile">
-					   <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-top"> 
-					</div>
-				</a>
+	            <div class="left-top-menu-itens">
+						<?php
+						$mysqli = conectar();
+						if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+							session_start(); 
+						
+							$sql = "SELECT * FROM user 
+							WHERE user_id = ".$_SESSION['user_id']." ";
+						
+										
+						$query = $mysqli->query($sql);
+						$numRows =  $query->num_rows;//número de linhas
+						
+						while (    $dados = $query->fetch_assoc()  )
+						{
+						?>
+								<a href="main.php?page=userLogin">
+									
+								<?php
+									if(file_exists("../images/users/".$dados["user_new_post_image"])){
+									?>
+										<div class="user-image-profile">
+											
+											<div class='container-img-user' 
+											     style="background-image: url('../images/users/media_<?php print $dados["user_photo_perfil"];?>');"  >
+											</div><!--fim div box-iten-post -->
 
-				<a href="main.php?page=feeds">	
-				   <div class="top-menu-itens"><img src="../images/layout/logo-meet-icon-01.jpg"></div> 
-			    </a>   
-            </div><!--fecha left-top-menu-itens -->
+
+										</div>
+									
+									<?php
+									}else{
+										?>
+									<div class="user-image-profile">
+										<img src="../images/users/305639912.png" class="user-image-profile-top"> 
+									</div>
+									<?php
+
+									}//fecha if file_exists
+									?>
+								</a>
+							
+
+							<a href="main.php?page=feeds">	
+							<div class="top-menu-itens"><img src="../images/layout/logo-meet-icon-01.jpg"></div> 
+							</a>   
+
+                            <div class="top-info-updateFeeds" id="top-info-updateFeeds">
+                               [ update feeds ]
+							</div><!--updateFeeds -->
+
+                </div><!--fecha left-top-menu-itens -->
 
 
 
@@ -1393,34 +1877,38 @@ function topMenu(){
 			   }//fecha while
 			?>
 		   
-			<div class="rigth-top-menu-itens"> 
-			<a href="main.php?page=notification">
-				<div class="top-menu-itens">
+				<div class="rigth-top-menu-itens"> 
+							<a href="main.php?page=notification">
+								<div class="top-menu-itens">
+									
+									<?php 
+									$numNotifications =  verificarNotifications( trim($_SESSION['user_id']) );
+									if($numNotifications > 0){
+										
+										?>
+											<img src="../images/layout/svg/notifications-actived-icon.svg" width="25">
+											<?php
+											print $numNotifications; 
+									}else{
+										?>
+											<img src="../images/layout/svg/notification-icon-01.svg" width="25">
+										<?php
+									}      
+									?>
+								</div>	
+							</a>
+						
+						
 					
-					<?php 
-					   $numNotifications =  verificarNotifications( trim($_SESSION['user_id']) );
-					   if($numNotifications > 0){
-                          
-						   ?>
-						     <img src="../images/layout/svg/notifications-actived-icon.svg" width="25">
-							<?php
-							print $numNotifications; 
-					   }else{
-                           ?>
-						     <img src="../images/layout/svg/notification-icon-01.svg" width="25">
-						   <?php
-					   }      
-					 ?>
-				</div>
-			 </a>
-			<a href="main.php?page=settings">
-				<div class="top-menu-itens"><img src="../images/layout/svg/settings-icon-01.svg" width="25"></div>
-			</a>
-			<a href="main.php?page=logoff">
-				<div class="top-menu-itens"><img src="../images/layout/svg/logoff-icon-01.svg" width="25"> </div>
-			</a>
-			</div>
-		</div>
+					
+						<a href="main.php?page=settings">
+						   <div class="top-menu-itens"><img src="../images/layout/svg/settings-icon-01.svg" width="25"></div>
+						</a>
+						<a href="main.php?page=logoff">
+						   <div class="top-menu-itens"><img src="../images/layout/svg/logoff-icon-01.svg" width="25"> </div>
+						</a>
+			    </div><!--fecha div rigth-top-menu-itens -->
+	</div><!--fecha div box-top-menu -->
 	<?php
 }
 

@@ -21,6 +21,7 @@
 	 </head>
 	 <body>
 		 <div class="main">
+			
 			 <?php
 			 
 			    if(isset($_GET["page"])){
@@ -31,6 +32,7 @@
 								
 									$sql = "INSERT INTO user (       
 									user_name    ,
+									user_tagname ,
 									user_password,
 									user_birthday,
 									user_sexo    ,
@@ -42,6 +44,7 @@
 									)
 									values(
 									'".$_POST['userName']."'      ,
+									'".$_POST['tag-name']."'      ,
 									'".$_POST['userPassword']."'  ,
 									'".setFormatAmericanDate(   trim($_POST['usereBirthday'] )  )."' ,
 									'".$_POST['userSexo']."'      ,
@@ -54,11 +57,26 @@
 									
 
 									$query = $mysqli->query($sql);
-									print "<div class='box-info-center'>
+									print " <div class='box-info-center'>
 												<span> 
 												Dados Gravados com sucesso!
 												</span>
-										</div>";
+										    </div>";
+
+							//redirecionando para a página de inicio do usuario
+							
+							$sql = "SELECT * FROM user 
+							WHERE user_tagname = '".trim($_POST['tag-name'])."'  ";
+							$query = $mysqli->query($sql);
+							$numRows =  $query->num_rows;
+							$dados = $query->fetch_assoc();
+
+                            //abre a tela de Usuário
+
+							$_SESSION['user_id'] = $dados["user_id"]; 
+                            areaUser( $dados["user_id"] );
+							
+
 
 
 							}if($_GET["page"] == "updateuser"){
@@ -76,12 +94,12 @@
 														 user_bio      =  '".$_POST['userBio']."'
 								                         WHERE user_id = ".$_SESSION['user_id']."";
 								$query = $mysqli->query($sql);
-								print "<div class='box-info-center'>
+								print "  <div class='box-info-center'>
 								          <p><p>
 								          <span> 
 								            Dados alterados com sucesso!
 								          </span>
-						              </div>";
+						                </div>";
 									  ?>
 									<script>
 										//redireciona a página (Refresh)
@@ -117,12 +135,12 @@
 										
 										
 										print "<div class='box-info-center'>
-												<p>
-												<p>
-										        <span> 
-													Publicaçâo efetuada!
-												</span>
-											</div>";
+												   <p>
+												    <p>
+										            <span> 
+													   Publicaçâo efetuada!
+												    </span>
+											     </div>";
 
 											?>
 											<script>
@@ -170,7 +188,14 @@
 							
 							}if($_GET["page"] =="feeds"){
 								
-								feeds();
+                                ?>
+								 <div class="box-update-feeds" id="box-update-feeds"></div>
+
+                                      <?php print feeds(); ?>
+
+	                            <?php
+								 
+								
 
 							}if($_GET["page"] =="search"){
 							  
@@ -239,11 +264,11 @@
 							
 
 							
-							if (isset($_SESSION) && isset($_SESSION['user_id']) ){ //necessário inicializar sessão sempre que uma página nova é criada
-							
-							topMenu();//desenha o topo    
-							footMenu();//Desenha o footMenu	
-						  }
+								if (isset($_SESSION) && isset($_SESSION['user_id']) ){ //necessário inicializar sessão sempre que uma página nova é criada
+											
+											topMenu();//desenha o topo    
+											footMenu();//Desenha o footMenu	
+										}
 				}else{
 					
                    //CadUser();//chama user();
@@ -254,7 +279,77 @@
 
                 
 			 ?>
+			
 		 </div>
+
+
+
+          <script>
+
+
+
+           
+			
+	   /*
+	   for(let i=0; i< setMessage.length; i++ ){
+					   
+					   setMessage[i].addEventListener("click", function(e){
+					   e.preventDefault();
+					   alert("clicou");
+
+
+					   });
+		   }*/
+			//Acões gerais
+			//Lendo os feeds
+           
+			
+            let boxUpdateFeeds = document.getElementById("box-update-feeds");
+			let topInfoUpdateFeeds = document.getElementById("top-info-updateFeeds");
+
+			setInterval(function () {
+				    // alert("Foi");
+                        let url = 'requisicoesajax.php?page=checarnewpost&usernewpostid='+<?php print $_SESSION['user_new_post_id'];?> ;
+						let xhr = new XMLHttpRequest();
+						xhr.open("GET", url, true);
+						xhr.onreadystatechange = function() {
+							if (xhr.readyState == 4) {
+								if (xhr.status = 200)
+									 console.log(xhr.responseText);
+									 
+									 if(xhr.responseText != "no"){//[no] não recarregue nada
+									    //updateFeeds.innerHTML = xhr.responseText;//atualiza a tela de feeds se houver nova postagem
+									    boxUpdateFeeds.innerHTML = xhr.responseText;
+									
+									
+										//getMsgTex.value = "";//lempa o texto do input
+									//setando o novo icone de like vermelho like
+									 }else{
+										topInfoUpdateFeeds.style.backgroundColor = "#FFFF00";
+									 }
+								}
+							}
+							xhr.send();
+
+
+			}, 8000);
+			
+
+			
+	
+
+			
+
+            
+
+
+		  </script>
+
+
+
 	 </body>
  </html>
+
+
+
 

@@ -10,36 +10,42 @@ body{
 /*Para telas que tenham até no maximo 601px, vai de 0px até 601 */
 /*@media only screen and (max-width:601px){*/
 	.main{
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		background-color: #FFFFFF;
 		/*width: 100%;*/
 		max-width: 500px;/*Redimenciona ate, no máximo 500px de largura*/
 		border: 1px solid #E7E7E7;
-		margin: auto;
-		padding-top: 50px;/*Necessário devido os menus top e foot para não cortar os conteúdos*/
+		
+		padding-top: 80px;/*Necessário devido os menus top e foot para não cortar os conteúdos*/
 		margin-bottom: 50px;
 	}
 
 	/*top do site*/
 	.box-top-menu{
-		position: fixed;
-		top: 0px;
+		
+		margin: 0;
+		padding: 0;
 		display: flex;
 		flex-direction: row;
 		justify-content:space-between;
 		align-items: center;
+		position: fixed;
+		top: 0px;
 		z-index: 8;
 		width: 100%;
 		max-width: 500px;
 		height: 60px;
 		background-color: #FFFFFF;
+		border: 0px solid #f89191;
+		
    }
    .rigth-top-menu-itens{
 	display: flex;
 	/*border: 1px solid #E7E7E7;*/
 	gap: 20px;
-	padding-right: 20px;
+	padding-right: 50px;
    }
    .rigth-top-menu-itens a{
 	text-decoration: none;
@@ -54,6 +60,21 @@ body{
 	gap: 4px;
 	padding-left: 0px;
    }
+
+
+ .top-info-updateFeeds{
+	visibility: hidden;
+	position: absolute;
+	top: 60px;
+	right:12px;
+	width: 150px;
+	height: 30px;
+	border: 1px solid #aaaaaa;
+	color: #000000;
+	background-color: #FFFFFF;
+	font-weight: bolder;
+ }
+
    
 
   /*foot do site*/
@@ -74,8 +95,10 @@ body{
 	}
   /*fim topo do site*/
 	.box-cad-user{
+		    position: relative;
 		    background-color: #FFFFFF;
 		    height: 100%;
+			max-width: 500px;
 		    border: 1px solid #FFFFFF;
 			display: flex;
 			flex-direction: column;
@@ -88,6 +111,29 @@ body{
 		border: 1px solid #FFFFFF;
 		background-color: #FFFFFF;
 		width: 90%;
+	}
+	.box-guia-modal-cad-user{
+		position: absolute;
+		visibility: visible;
+		padding: 12px;
+		background-color: #FFFFFF;
+		border: 1px solid #f54974;;
+		color: #f54974;
+		font-family: sans-serif;
+		width: 49%;
+		height: 20%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.close-modal{
+		position: absolute;
+		padding: 10px;
+		border: 1px solid #080808;
+		color: #ffffff;
+		background-color: #000000;
+		left: 0px;
+		top: 0px;
 	}
 	
 	.carregar-foto{
@@ -294,23 +340,26 @@ body{
 
 	/*Estilizando lista de postagens do usuario - tela profile*/
 	.box-post-list{
+		position: relative;
 		display: flex;
 		flex-direction: row;
-		justify-content: flex-start;
+		justify-content: space-between;
 		align-items: flex-start;
 		flex-wrap: wrap;
+		border: 0px solid #f54974;
+		
 		
 	}
 	.box-iten-post{
-		display: flex;
-		
-		flex-grow: 1;
+		position: relative;
 		height: 120px;
-		width: 120px;
-		/*border: 1px solid #E7E7E7;*/
-		background-position: center;
 		
+		border: 0px solid #61abf0;
+		background-color: #ffffff;
+		background-position: center;
+		background-size: 199%;
 		background-repeat: no-repeat;
+		
 		
 	}
 
@@ -361,12 +410,23 @@ body{
 		
 	}
 
-
+    
 	.user-image-profile{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
 		width: 80px;
+
 		
+	}
+
+	.container-img-user{
+		position: relative;
+		height: 58px;
+		width: 58px;
+		border: 0px solid #61abf0;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 61px;
 	}
 
 	.user-image-profile-feed{
@@ -383,6 +443,9 @@ body{
 		width: 33px;
 		
 	}
+
+
+
 	.bt-feed-publicar{
 		text-decoration: none;
 		padding-left: 8px;
@@ -601,6 +664,7 @@ body{
 	display: block;
 	font-weight: bold;
 	padding-left: 8px;
+	font-size: 12px;
 }
 /*Teste Cortar imagem*/
 

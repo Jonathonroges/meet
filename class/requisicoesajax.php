@@ -92,11 +92,29 @@
         $query = $mysqli->query($sql);
 
     
+    }if($_GET["page"] =="deletenotification"){
+        
+        //print "->".$_GET["messageid"];
+        $sql = "DELETE FROM notifications WHERE notifications_id = ".$_GET["notificationid"]."";
+        $query = $mysqli->query($sql);
+
+    
     }if($_GET["page"] =="searcuser"){
         
         //print "->data".$_GET["data"];
+        
+        //selecionando usuario local
+        $sql1 = "SELECT * FROM user WHERE 	user_id = ".$_SESSION['user_id']." ";
+        $query1 = $mysqli->query($sql1);
+        $numRows =  $query1->num_rows;//número de linhas
+        $dados1 = $query1->fetch_assoc() ;
+        
+        $userLatitude  = trim((float)$dados1["user_latitude"]);
+        $userLongitude = trim((float)$dados1["user_longitude"]);
+
+
         $sql = "SELECT * FROM user 
-	                     WHERE user_name LIKE '%".strtolower( trim( $_GET["data"] )  )."%' 
+	                     WHERE 	user_tagname LIKE '%".strtolower( trim( $_GET["data"] )  )."%' 
                          LIMIT 20 ";
         $query = $mysqli->query($sql);
         $numRows =  $query->num_rows;//número de linhas
@@ -109,15 +127,119 @@
                         <div class="box-resul-searc-list">
                             <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed">
                             <span class="searc-title-user-name">
-                            <?php print $dados["user_name"] ;?>
-                            </span>
-                        </div>
-                </a>    
-            <?php
+                            <?php 
+                                print $dados["user_tagname"]."
+                                      
+                                ";
+                               $lat1 = 0.0;
+                               $lon1 = 0.0;
+                               $lat2 = 0.0;
+                               $lon2 = 0.0;
+                               $lon = 0.0;
 
+                                $lat1 = $userLatitude;
+                                $lon1 = $userLongitude;
+                                $lat2 = $dados["user_latitude"];
+                                $lon2 = $dados["user_longitude"];
+                                
+                                
+                               
+                               
+                               /*
+                                print "<br>->".$lat1."<-<br>
+                                       ->".$lon1."<-<br>
+                                       ->".$lat2."<-<br>
+                                       ->".$lon2."<-<br>";*/
+                                 
+                                       $lat1 = deg2rad($lat1);
+                                       $lat2 = deg2rad($lat2);
+                                       $lon1 = deg2rad($lon1);
+                                       $lon2 = deg2rad($lon2);
+                               
+                                       $dist = (6371 * acos(cos($lat1) * cos($lat2) * cos($lon2 - $lon1) + sin($lat1) * sin($lat2)));
+                                       print "
+                                        <br><b>Está a ".number_format($dist, 1, '.', '')."Km</b>";//quilometros
+            
+                                 
+
+                            ?>
+                            </span>
+                          </div>
+                        </a>
+
+
+
+            <?php
         }
 
 
+    
+    
+    
+   
+
+
+    }
+    
+    
+    
+    
+    
+    if($_GET["page"] =="validausertagname"){
+    
+        $sql = "SELECT * FROM user WHERE user_tagname = '".trim($_GET["tagname"])."' ";
+            $query = $mysqli->query($sql);
+            $numRows =  $query->num_rows;//número de linhas
+            $dados = $query->fetch_assoc();
+            if($numRows >= 1){
+              print "1";
+                     
+            }else{
+
+               print "0";
+            }
+
+            
+    }if($_GET["page"] =="setcoordenadas"){
+        
+        $mysqli = conectar();
+        if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+            session_start(); 
+            $sql = "UPDATE  user SET    user_latitude = '".$_GET['latitude']."',
+                                        user_longitude = '".$_GET['longitude']."'
+                                        WHERE user_id = ".$_SESSION['user_id']."";
+            $query = $mysqli->query($sql);
+    
+    
+    }if($_GET["page"] =="checarnewpost"){
+    
+            
+             
+             //buscando id do ultimo post
+             
+            $sql = "SELECT * FROM user_new_post ORDER BY user_new_post_id DESC ";
+            $query = $mysqli->query($sql);
+            $numRows =  $query->num_rows;//número de linhas
+            $dados = $query->fetch_assoc();
+
+            //print "SESSAO->>>>>".$_SESSION['user_new_post_id']."dados: ".$dados["user_new_post_id"];
+
+            if( trim($dados["user_new_post_id"]) > trim($_SESSION['user_new_post_id'])){
+               
+                feeds();//e depos chama feeds
+                
+                $_SESSION['user_new_post_id'] = $dados["user_new_post_id"];//Atribuo o novo valor a SESSAO
+            
+            }else{
+                print "no";
+            }  
+
+           
+
+
+
+
+    
     }if($_GET["page"] =="editimagecropper"){
         
        // The file
