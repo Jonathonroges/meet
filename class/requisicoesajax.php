@@ -49,15 +49,21 @@
 
         
     }if($_GET["page"] =="setmessage"){
+
+
+
+        
        
         print "".$_GET["useid"]."-".$_GET["msg"];
         $sql = "INSERT INTO post_message (message_user_id,
-                                     message_post_id,	
+                                     message_post_id,
+                                     message_temp_id,	
                                      message_text,
                                      message_date,
                                      message_user_create_post) 
                               values( ".$_SESSION['user_id'].",
                                       ".$_GET["postid"].",
+                                      '".$_GET["messagetempid"]."',
                                       '".$_GET["msg"]."',
                                       NOW(),
                                       ".$_GET["usercreatepost"].")";
@@ -88,7 +94,12 @@
     }if($_GET["page"] =="deletemessage"){
         
         //print "->".$_GET["messageid"];
-        $sql = "DELETE FROM post_message WHERE message_id = ".$_GET["messageid"]."";
+        //GERA UM NUMERO TEMPORARIO, POIS QUANDO ADICIONAMOS DINAMICAMENTE, BASTA PEGAR ESSE NUMERO QUE FOI GERADO AINDA NO BROSER E REMOVER ATRASVEZ DE REFERENCIA
+        //AO GERAR UMA MENSAGEM COM O DOM, GERAMOS ESSE NÚMERO, QUE PODE SER REMOVIDA EM TEMPO REAL, E NO BANCO DE DADOS
+        
+        print "--->".trim($_GET["messagetempid"])."---";
+        
+        $sql = "DELETE FROM post_message WHERE message_temp_id = '".trim($_GET["messagetempid"])."' ";
         $query = $mysqli->query($sql);
 
     

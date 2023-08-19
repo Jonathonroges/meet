@@ -4,18 +4,29 @@ $mysqli = conectar();//Inicia uma conexão com o banco de dados
 
 function conectar(){//conecta ao BASE de dados e passa o objeto conexão
   
-   //local host
-   $servidor = 'localhost';
-   $usuario = 'root';
-   $senha = '';//sem senha - senha padrão do PhpMyAdmin
-   $banco = 'meet';
+   
 
-     //EM PRODUCAO
+     //EM PRODUCAO - freewebhosting
 	 /*
 	 $servidor = 'localhost';
 	 $usuario = '532830';
 	 $senha = '19892008';//sem senha - senha padrão do PhpMyAdmin
 	 $banco = '532830';*/
+
+
+	 //local host
+	 $servidor = 'localhost';
+	 $usuario = 'root';
+	 $senha = '';//sem senha - senha padrão do PhpMyAdmin
+	 $banco = 'meet';
+
+	 /*
+	 //EM PRODUCAO -  000Webhost
+	 $servidor = 'localhost';
+	 $usuario = 'id19182302_apoloone';
+	 $senha = 'Jr.19892008';//sem senha - senha padrão do PhpMyAdmin
+	 $banco = 'id19182302_apoloonedb';*/
+
  
 	
 	// Conecta-se ao banco de dados MySQL
@@ -163,7 +174,7 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 							if(trataNome.length < 4 || trataNome == ""){//não digitou
 								userTagNameValida.value = "false";//seta o input para false para não deixar cadastrar usuarios com registros iguais
 								valida = false;
-								userNameEditText.focus();
+								//userNameEditText.focus();
 							}
 							//alert(xhr.responseText);
 							  
@@ -192,42 +203,42 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 							
 							boxModalInfo.style.visibility = "visible";
 							infoTextModal.innerHTML = "Nome de usuário não informado ou invalido";
-							userNameEditText.focus();
+							//userNameEditText.focus();
 							valida = false;
 
 						}else if(userPassword.value.length < 6){
 							
 							boxModalInfo.style.visibility = "visible";
 							infoTextModal.innerHTML = "Password de, no mínimo, 6 caracteres!";
-							userPassword.focus();
+							//userPassword.focus();
 							valida = false;
 						}
 						if(userBirthday.value == ""){
 							
 							boxModalInfo.style.visibility = "visible";
 							infoTextModal.innerHTML = "Data de nascimento vazio!";
-							userBirthday.focus();
+							//userBirthday.focus();
 							valida = false;
 
 						}if(userPhone.value == ""){
 							
 							boxModalInfo.style.visibility = "visible";
 							infoTextModal.innerHTML = "Telefone vazio!";
-							userPhone.focus();
+							//userPhone.focus();
 							valida = false;
 						
 						}if(userEmail.value == ""){
 							
 							boxModalInfo.style.visibility = "visible";
 							infoTextModal.innerHTML ="Email vazio!";
-							userEmail.focus();
+							//userEmail.focus();
 							valida = false;
 						
 						}if(textAreaBio.value =="Digite algo sobre você" || textAreaBio.value ==""){
 							
 							boxModalInfo.style.visibility = "visible";
 							infoTextModal.innerHTML ="Digite algo sobre você!";
-							textAreaBio.focus();
+							//textAreaBio.focus();
 							valida = false;
 
 						}
@@ -337,8 +348,7 @@ function areaUser( $userId ){
 
 	
 
-	if (!isset($_SESSION))
-		session_start(); 
+	 
 		
       if( $userId == NULL){
 		
@@ -402,7 +412,7 @@ function areaUser( $userId ){
 										print "
 										<br><b>
 										<img src='../images/layout/svg/location-2-icon-inactive.svg' width='15'>
-										Está a ".number_format($dist, 1, '.', '')." Km</b>";//quilometros
+										Está a ".(number_format($dist, 1, '.', ''))." Km</b>";//quilometros
 						    ?>
 						</div><!--fecha box-info-tex-profile -->
 
@@ -411,7 +421,7 @@ function areaUser( $userId ){
 
 
 						<?php
-						if(file_exists("../images/users/".$dados["user_new_post_image"])){
+						if(file_exists("../images/users/media_".$dados["user_photo_perfil"])){
 						?>
 						<div class="box-moldura-profile" >
 						        <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile"> 
@@ -785,11 +795,13 @@ function newPost(){
 }
 function openUserPost($user_id, $post_id){
 	
-	$gerenciarPost = false;
-	
-	$mysqli = conectar();
 	if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
 	    session_start(); 
+	
+		$gerenciarPost = false;
+	
+	$mysqli = conectar();
+	
 	
 	$sql = "SELECT * FROM user, user_new_post
 	                 WHERE user_new_post_id = ".$post_id."
@@ -815,6 +827,9 @@ function openUserPost($user_id, $post_id){
 			?>	
 
 		   <?php 
+        
+                
+
 		    if($dados["user_new_post_user_id"] == $_SESSION['user_id'])
 			 {
 				$gerenciarPost = true;
@@ -883,6 +898,8 @@ function openUserPost($user_id, $post_id){
              
 
             <?php
+						
+						
 						$sql1 = "SELECT * FROM user, user_new_post
 						WHERE user_new_post_id = ".$post_id."
 						AND   user_id = ". $_SESSION['user_id']."";//$user_id , $_SESSION['user_id']
@@ -902,8 +919,9 @@ function openUserPost($user_id, $post_id){
 				</div>
 				
 				<!-- Para Adicionar o post dinamicamente-->
-				<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>">
-				</div>
+				
+
+
 		   </div>
 
 
@@ -1113,14 +1131,18 @@ function feeds(){
 									<img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
 									<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
 									<input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
+									<input type="hidden" id="tempemgsid-<?php print $dados["user_new_post_id"];?>" value="<?php print rand();?>" >
 									<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
 								</div>
 							
 								<!-- Lista de comentarios-->
 								<br>
 								<span class="title-feeds-messages">Comentarios</span>
+								<!--Div temperaria para receber comentarios -->
+                                <div class="box-temp-line-msg" id="boxtemplinemsg-<?php print $dados["user_new_post_id"]; ?>"></div>
+
 								<br>
-								<div class="box-list-feed-messages" id="msg-<?php print $dados["user_new_post_id"];?>"></div>
+								
 								<!--lendo lista de mensagens  -->
 								<?php
 								//função para listar comentarios
@@ -1233,38 +1255,72 @@ function jsPostMessage(){
 					
 
 					let message = this.id.split("-");//separando [id]
-					//alert(message[1].trim());
+					alert(message[1].trim());
 					let getBoxMgs =  document.getElementById("msg-"+message[1].trim());
 					let userDestinacao = document.getElementById("userdestinacao-"+message[1].trim());//para quem a menssagem é enviada
 					//alert("->"+userDestinacao.value);
 
 
 					let getMsgTex =  document.getElementById("input-message-"+message[1].trim());
-					//alert(getMsgTex.value);
-					if( getMsgTex.value != ""){
-					  
-						let html = " <img src='../images/users/pequena_<?php print $dados["user_photo_perfil"]; ?>' "+
-										 "class='user-image-profile-feed-message'>"+
-										 "<b><?php print  $dados["user_tagname"]; ?></b> "+
-										 " "+getMsgTex.value+" ";
-										 
-										   getBoxMgs.innerHTML = html;
+                    //pegando o container geral das mensagens
+					
+					
+					let boxtemplinemsg =  document.getElementById("boxtemplinemsg-"+message[1].trim());
+					
+					//let getLineIndexMsg =  document.getElementById("linemgsid-");
 
+
+
+					//alert(getMsgTex.value);
+					if( getMsgTex.value != ""){//verifica se o campo está vazio
+					  
+						
+
+										let messageTemoId = (Math.random() * 100);//GERA UM NUMERO RANDOMICO PARA ALOCAÇÃO E CAPTURA DE ELEMENTOS EM TEMPO DE EXECUÇÃO E CRIAÇÃO DINAMICA
+
+												let html = "<div class='box-container-message' id='linemgsid-"+messageTemoId+"' >"+
+																	"   <div class='container-message-left'>"+
+																	"        <input  type='hidden' id='tempemgsid-"+messageTemoId+"' value='"+messageTemoId+"'>"+
+																			"  <div class='box-round-img-user'"+
+																				   "style='background-image: url(../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>);' >"+	
+																					"<div class='layer-roud-white-img-user-icon'></div>"+
+																			  "</div>"+
+												                             
+												                              "<b><?php print  $dados["user_tagname"]; ?></b> "+
+																			  "<br> "+getMsgTex.value+" "+
+										                              " </div>"+
+										                              
+										                    "          <div class='container-message-rigth-actions' id='mgsid-"+messageTemoId+"' >"+
+										                     "               <img src='../images/layout/svg/more-finfo-icon-01.svg' width='25' >"+
+															 "             <div class='box-messasge-options-expand' id='messasgeOptionsExpand-"+messageTemoId+"'>"+
+															 "               <img src='../images/layout/svg/remove-01.svg' width='25' >"+
+															 "            </div>"+
+															 "         </div>"+
+															 " </div>";
+
+										  //adicionando elementos DOM dinamicamente
+										  
+										  var newLineMsg = document.createElement("div");					 
+										      newLineMsg.innerHTML = html;
+											  boxtemplinemsg.appendChild(newLineMsg);
+                                             
 										  //gravando os comentarios
 										
-										  let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&userdestinacao='+userDestinacao.value+'&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print  $_SESSION['user_id'];?>';
+										let url = 'requisicoesajax.php?page=setmessage&useid=<?php print $_SESSION['user_id']; ?>&userdestinacao='+userDestinacao.value+'&postid='+message[1].trim()+'&msg='+getMsgTex.value+'&usercreatepost=<?php print  $_SESSION['user_id'];?>&messagetempid='+messageTemoId+'';
 										let xhr = new XMLHttpRequest();
 										xhr.open("GET", url, true);
 										xhr.onreadystatechange = function() {
 											if (xhr.readyState == 4) {
 												if (xhr.status = 200)
 													//console.log(xhr.responseText);
+													//getBoxMgs.innerHTML = html;//desenha o html dinamicamente
 													getMsgTex.value = "";//lempa o texto do input
 													//setando o novo icone de like vermelho like
 													
 												}
 											}
 											xhr.send(); 
+											
 					   }
 
 					});
@@ -1283,7 +1339,7 @@ function jsPostMessage(){
 				 //getOptiontMessage[i].addEventListener("click", function(e){
 				 //e.preventDefault();
 				 let messageId = this.id.split("-");//separando [id]
-				 //alert(messageId[1].trim());
+				// alert(""+messageId[1].trim());
 				 //removendo visualização
 				 
 				 let messasgeOptionsExpand =  document.getElementById("messasgeOptionsExpand-"+messageId[1].trim() );
@@ -1308,31 +1364,47 @@ function jsPostMessage(){
 					 
 
 					//evento no icone da lixeira
-					messasgeOptionsExpand.addEventListener("click", function(e){
-						
-							  let getBoxMsg =  document.getElementById("linemgsid-"+messageId[1].trim());
-								getBoxMsg.innerHTML = "";
+					$( "body" ).delegate( ".box-messasge-options-expand", "click", function(e){
+					//messasgeOptionsExpand.addEventListener("click", function(e){
+						     
+						      
+
+							  let getBoxMsg  =  document.getElementById("linemgsid-"+messageId[1].trim());
+							  let tempeMgsid =  document.getElementById("tempemgsid-"+messageId[1].trim());
+							 // alert(">>>"+messageId[1].trim());
+                              //alert("DEL>>>>"+tempeMgsid.value);
+								 
 								messasgeOptionsExpand.style.visibility = "hidden";//esconse o box options
 								//gravando os comentarios
 								
-								let url = 'requisicoesajax.php?page=deletemessage&messageid='+messageId[1].trim();
+								
+								
+                               // alert("DEL=>"+messageId[1].trim());
+								e.stopPropagation();//evita a propagação de eventos a elementos pai
+
+								let url = 'requisicoesajax.php?page=deletemessage&messagetempid='+messageId[1].trim();
 													let xhr = new XMLHttpRequest();
 													xhr.open("GET", url, true);
 													xhr.onreadystatechange = function() {
 														if (xhr.readyState == 4) {
 															if (xhr.status = 200)
-																//console.log(xhr.responseText);
-																getMsgTex.value = "";//lempa o texto do input
+															    
+															    getBoxMsg.innerHTML = "";//remove a linha
+																console.log(xhr.responseText);
+																//getMsgTex.value = "";//limpa o texto do input
 																//setando o novo icone de like vermelho like
-																
+																//alert("msg-id: "+messageId[1].trim());
 															}
 														}
 														xhr.send();
 								
 
-					})
+							
+								
 
-				 
+					});
+
+					e.stopPropagation();//evita a propagação de eventos a elementos pai
 			
 				 })
 				 
@@ -1363,64 +1435,76 @@ function listMessages( $post_id, $gerenciarPost ){//passa o id do post e se poss
 		$numRows =  $query->num_rows;//número de linhas
                
 			   ?>
-		        <span class="title-feeds-messages">Comentarios
-				    <img src="../images/layout/svg/message-icon-01.svg" width="15" style="padding-left:6px;">  
-					<?php print $numRows; ?>
-	             </span>
-               <?php
+		            <span class="title-feeds-messages">Comentarios
+				       <img src="../images/layout/svg/message-icon-01.svg" width="15" style="padding-left:6px;">  
+					 <?php print $numRows; ?>
+	                </span>
+               
+		<div class="box-main-messages" > 
+		
+		<!-- Necessário para as menssagens dinâmicas-->
+		<div class="box-temp-line-msg" id="boxtemplinemsg-<?php print $post_id; ?>"></div>
 
+		            <?php
 		while (    $dados = $query->fetch_assoc()  ) {
            ?>
-            <div class="box-container-message" id="linemgsid-<?php print $dados["message_id"]; ?>" >
-			
-			    
-			
-			<div class="container-message-left">
-			    <a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">    
-			        <div class="box-round-img-user"
-					      style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>');" >	
-				          <div class="layer-roud-white-img-user-icon"></div>
-				
-			        </div>
-		        </a>  
+		            
 					
-					<div class="container-message-rigth">
-				   <?php
-				      print "<span class='msg-user-neme-text-name'>
-					            ".$dados["user_tagname"]."
-					         </span>
-					         ".$dados["message_text"]."
-							 <span class='msg-user-neme-text-date'>
-							    ".separarData($dados["message_date"])." as ".separarHora($dados["message_date"])."
-							 </span>
-								"; 
-					?>
-					 
-				</div>
-			</div>
-				
+					
+					<div class="box-container-message" id="linemgsid-<?php print $dados["message_temp_id"]; ?>" >
+						
+							
+								
+								<div class="container-message-left">
+									<a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">    
+										<div class="box-round-img-user"
+											style="background-image: url('../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>');" >	
+											<div class="layer-roud-white-img-user-icon"></div>
+									
+										</div>
+									</a>  
+										
+										<div class="container-message-rigth">
+									<?php
+										print "<span class='msg-user-neme-text-name'>
+													".$dados["user_tagname"]."
+												</span>
+												".$dados["message_text"]."
+												<span class='msg-user-neme-text-date'>
+													".separarData($dados["message_date"])." as ".separarHora($dados["message_date"])."
+												</span>
+													"; 
+										?>
+										
+									</div>
+								</div>
+									
 
-			<?php
-			     
+								<?php
+									
 
-			  // if(   $dados["message_user_id"] == $_SESSION['user_id'] ||  $userCreatePost == $dados["message_user_id"]){
+								// if(   $dados["message_user_id"] == $_SESSION['user_id'] ||  $userCreatePost == $dados["message_user_id"]){
 
-                if(   $gerenciarPost ||  $dados["message_user_id"] == $_SESSION['user_id']  ){ 
-			 ?>
-				<div class="container-message-rigth-actions" id="mgsid-<?php print $dados["message_id"]; ?>" >
-				      <img src="../images/layout/svg/more-finfo-icon-01.svg" width="25" >
-					  
-					  <div class="box-messasge-options-expand" id="messasgeOptionsExpand-<?php print $dados["message_id"]; ?>">
-					     <img src="../images/layout/svg/remove-01.svg" width="25" >
-				      </div>
-				</div>
-			<?php
-			   }//fecha o if
-			 ?>
-			</div>
+									if(   $gerenciarPost ||  $dados["message_user_id"] == $_SESSION['user_id']  ){ 
+								?>
+									<div class="container-message-rigth-actions" id="mgsid-<?php print $dados["message_temp_id"]; ?>" >
+										<img src="../images/layout/svg/more-finfo-icon-01.svg" width="25" >
+										
+										<div class="box-messasge-options-expand" id="messasgeOptionsExpand-<?php print $dados["message_temp_id"]; ?>">
+											<img src="../images/layout/svg/remove-01.svg" width="25" >
+										</div>
+									</div>
+								<?php
+								}//fecha o if
+								?>
+					</div><!--fecha div box-container-message -->
 
 			<?php
        }//final do while
+    ?>
+	</div><!--fecha div box-main-messages -->
+	<?php
+
 } 
 
 
@@ -1821,8 +1905,7 @@ function topMenu(){
 	            <div class="left-top-menu-itens">
 						<?php
 						$mysqli = conectar();
-						if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-							session_start(); 
+						
 						
 							$sql = "SELECT * FROM user 
 							WHERE user_id = ".$_SESSION['user_id']." ";
@@ -1837,7 +1920,7 @@ function topMenu(){
 								<a href="main.php?page=userLogin">
 									
 								<?php
-									if(file_exists("../images/users/".$dados["user_new_post_image"])){
+									if(file_exists("../images/users/".$dados["user_photo_perfil"])){
 									?>
 										<div class="user-image-profile">
 											

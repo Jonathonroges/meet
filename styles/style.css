@@ -570,17 +570,7 @@ body{
 
 	border: none;
   }
-  .box-list-feed-messages{
-	display: flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-	width: 100%;
-	/*border: 1px solid #E7E7E7;*/
-	align-items: center;
-	gap: 12px;
-	padding: 12px;
-  }
+  
   .title-feeds-messages{
 	display: block;
 	padding-left: 8px;

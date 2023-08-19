@@ -1,4 +1,10 @@
 <?php
+if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
+session_start();
+
+if(!isset($_SESSION['user_id']))
+          $_SESSION['user_id'] = NULL; 
+
 //session_start();//inicializo a sessao
   include "function.php";//Para recortar a imagem
   $mysqli = conectar();//Inicia uma conexão com o banco de dados
@@ -26,8 +32,8 @@
 			 
 			    if(isset($_GET["page"])){
 					
-					if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-					session_start(); 
+					
+
 							if($_GET["page"] == "cadUser"){
 								
 									$sql = "INSERT INTO user (       
@@ -39,8 +45,7 @@
 									user_phone   ,
 									user_email   ,
 									user_bio     ,
-									user_photo_perfil,
-									user_photo_perfil_blob
+									user_photo_perfil
 									)
 									values(
 									'".$_POST['userName']."'      ,
@@ -51,8 +56,7 @@
 									'".$_POST['userPhone']."'     ,
 									'".$_POST['userEmail']."'     ,
 									'".$_POST['userBio']."'       ,
-									'".$_POST['arquivo']."'       ,      
-									'".$_POST['blob-image']."'
+									'".$_POST['arquivo']."'             
 									)"; 
 									
 
@@ -81,8 +85,7 @@
 
 							}if($_GET["page"] == "updateuser"){
 								
-								if (!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-	                            session_start(); 
+								
 								$sql = "UPDATE  user SET user_photo_perfil = '".$_POST['arquivo']."',
 								                         user_photo_perfil_blob = '".$_POST['blob-image']."',
 								                         user_name = '".$_POST['userName']."',
@@ -112,8 +115,7 @@
 							}if($_GET["page"] == "setnewpostuser"){
 								
 								        $mysqli = conectar();
-										if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-										session_start(); 
+										
 										
 										$sql = "INSERT INTO user_new_post (       
 											user_new_post_user_id    ,
@@ -156,7 +158,7 @@
 
 								if(!isset($_SESSION)){//necessário inicializar sessão sempre que uma página nova é criada
 								
-								   session_start(); 
+								   //session_start(); 
 								   $userId = NULL;//se não houver logado, usuario é NULL(Inexistente)
 							   
 								}else{
@@ -182,8 +184,8 @@
 
 							}if($_GET["page"] =="openuserpost"){
 								
-								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-								session_start(); 
+								
+								
 								openUserPost( $_GET["user_id"], $_GET["post_id"] );//Metodo dentro de function.php
 							
 							}if($_GET["page"] =="feeds"){
@@ -199,21 +201,18 @@
 
 							}if($_GET["page"] =="search"){
 							  
-								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-								 session_start(); 
+								
 								 
 								 searcUse();
 							
 							}if($_GET["page"] =="configuration"){
 								
-								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-								 session_start(); 
+								
 								print "<p>configuration";
 
 							}if($_GET["page"] =="settings"){
 								
-								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-								 session_start(); 
+								
 								print "<p>settings";
 							
 							}if($_GET["page"] =="logoff"){
@@ -230,8 +229,7 @@
 							}if($_GET["page"] =="removepost"){
 								
 								$mysqli = conectar();
-								if(!isset($_SESSION))//necessário inicializar sessão sempre que uma página nova é criada
-								 session_start(); 
+								
 
 								 $sql = "DELETE  FROM user_new_post   
 								                 WHERE user_new_post_id = ".$_GET["post_id"];
