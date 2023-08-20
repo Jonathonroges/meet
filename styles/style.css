@@ -16,10 +16,11 @@ body{
 		background-color: #FFFFFF;
 		/*width: 100%;*/
 		max-width: 500px;/*Redimenciona ate, no máximo 500px de largura*/
+		height: 100%;
 		border: 1px solid #E7E7E7;
 		
 		padding-top: 80px;/*Necessário devido os menus top e foot para não cortar os conteúdos*/
-		margin-bottom: 50px;
+		padding-bottom: 50px;
 	}
 
 	/*top do site*/
@@ -235,14 +236,7 @@ body{
 		width: 100%;
 	}
 
-	.box-info-center{
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		font-size: 18px;
-	}
+	
 	
 	.box-geral-profile{
 		display: flex;
@@ -763,6 +757,150 @@ body{
 	height: 41px;
 	background-position: 0px 0px;
 }
+
+
+.box-login-main{
+		
+	position: relative;
+	top: -80px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	font-size: 18px;
+	border: 0px solid #61abf0;
+	padding: 8px;
+}
+
+.box-login-center{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	width: 100%;
+}
+.box-login-main div{
+	border: 0px solid #f6fa00;
+}
+.box-login-top{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+}
+
+
+.container-edit-email{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+	border: none;
+	background-image: url("../images/layout/svg/email-icon-01.svg");
+	background-position: 4px 4px;
+	background-repeat: no-repeat;
+	background-size: 20px;
+	
+	
+	
+}
+.input-userEmail{
+	background-color: transparent;
+	width: 98%;
+	padding: 4px;
+	font-family: sans-serif;
+	font-size: 19px;
+	outline: none;
+	border: none;
+	text-indent: 25px;
+	border-bottom: 1px solid #c5c5c5;
+}
+
+
+
+.container-edit-Password{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+	border: none;
+	background-image: url("../images/layout/svg/password-icon-01.svg");
+	background-position: 4px 4px;
+	background-repeat: no-repeat;
+	background-size: 20px;
+	
+	
+	
+	
+}
+.input-userPassword{
+	background-color: transparent;
+	width: 98%;
+	padding: 4px;
+	font-family: sans-serif;
+	font-size: 19px;
+	outline: none;
+	border: none;
+	text-indent: 25px;
+	border-bottom: 1px solid #c5c5c5;
+}
+
+.container-bt-Logar{
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	padding: 20px;
+}
+
+.bt-login-user{
+	outline: none;
+	font-size: 20px;
+	border: none;
+	color: #E7E7E7;
+	background-color: #000000;
+	width: 150px;
+	height: 50px;
+}
+.box-create-new-conta{
+	display: flex;
+	justify-content: center;
+}
+
+.box-create-new-conta a{
+	text-decoration: none;
+	font-family: sans-serif;
+	color: #080808;
+}
+.box-info-top-login{
+	display: flex;
+	justify-content: center;
+	font-family: sans-serif;
+	font-size: 16px;
+	padding-top: 12px;
+}
+
+.box-login-foot{
+
+	display: flex;
+	flex-direction: row;
+	width: 80%;
+	justify-content: start;
+	align-content: flex-start;
+	border: 1px solid #121312;
+	font-size: 14px;
+	font-family: sans-serif;
+	padding: 50px;
+	padding-top: 50px;
+}
+
+
+#form-login-user{
+	
+	border: 0px solid #95f061;
+}
+
 
 
 /*Teste Cortar imagem*/

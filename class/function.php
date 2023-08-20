@@ -61,7 +61,7 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 	  <div class="container-user">
    <form action="main.php?page=cadUser" method="POST" id="form-cadastro-user">
 	   
-	   
+            <img src="../images/layout/svg/fotook-logo-name-01.svg" width="80">
 			<BR>NOVO CADASTRO<BR>
 			
 		   <div class='files'></div>
@@ -267,46 +267,56 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 					}*/
 				});
 
-
-
-				
-
-
-
-
-
-		
 </script>
 
 
    <?php
-   }
+}
 
 function windowLoginUser(){
-	echo "<div class='box-info-center'>
-	           <span> 
-	              ";
-                   ?>
-                    <form action="main.php?page=userLogin" id="form-login-user" method="POST">
-						<span>EFETUAR LOGIN</span><br><br>
-						<span style='color: #ee0000;' id="result-form"></span><br>
-					   <input type="text" id="userEmail" name="userEmail" placeholder="email"><br><br>
-					   <input type="password" id="userPassword" name="userPassword" placeholder="senha" ><br>
-					   <input type="submit" value="logar" name="opc" id="bt-login-user" >
-                    </form>
-					<a href="main.php?page=newcaduser">Criar uma conta</a>
+    ?>
 
-				   <?php
-           echo "			  
-			   </span>
-			</div>";
+	<div class='box-login-main'>
+	        <div class="box-login-top"> 
+				<img src="../images/layout/svg/fotook-logo-name-01.svg" width="100"><br>
+			</div>
+			
+			<div class="box-login-center">
+				<form action="main.php?page=userLogin" id="form-login-user" method="POST">
+					 <div class="box-info-top-login">Efetuar Login</div>
+					<span style='color: #ee0000;' id="result-form"></span><br>
+						<div class="container-edit-email">
+						   <input type="text"  id="input-userEmail" class="input-userEmail" name="input-userEmail" placeholder="email">
+						</div> 
+						<div class="container-edit-Password">  
+					       <input type="password" id="input-userPassword" class="input-userPassword" name="input-userPassword" placeholder="senha" >
+                        </div>
+						<div class="container-bt-Logar"> 
+					       <input type="submit" value="logar" name="opc" id="bt-login-user" class="bt-login-user" >
+                        </div>
+				</form>
+				<div class="box-create-new-conta">
+				    <a href="main.php?page=newcaduser">Criar uma conta</a>
+                </div>
+            </div>	
+            
+			<div class="box-login-foot">
+				Bem vindo ao fotook! Aqui você compartilha momentos,
+				experiencias, memórias e reflexões.<br><br>
+				Venha fazer parte dessa rede você também!<br> 
+				É grátis!<br>
+				Cadastre-se!
+				<br><br>
+				Fundador:  ® Jonathon Roges, Ago 2023.
+             </div>	
+	</div>
 
-           ?>
+           
             <script type="text/javascript">
 				/*validando formulario js*/
 				 let formLogin = document.getElementById("form-login-user");
-				 let userEmail = document.getElementById("userEmail");
-                 let userPassword = document.getElementById("userPassword");
+				 let userEmail = document.getElementById("input-userEmail");
+                 let userPassword = document.getElementById("input-userPassword");
 				 let btFormSubmit = document.getElementById("bt-login-user");
                  let resultForm = document.getElementById("result-form");
 				 let validar = true;
@@ -338,7 +348,7 @@ function windowLoginUser(){
                          
 					 });
             </script>
-		   <?php
+<?php
 
 }
 
@@ -355,14 +365,16 @@ function areaUser( $userId ){
 		//print "->>>nao existe".$_POST["userEmail"]." <<- ";
 		
 		$sql = "SELECT * FROM user 
-	                 WHERE user_email = '".strtolower( trim($_POST["userEmail"])  )."'   
-	                 AND  user_password = '".trim($_POST["userPassword"])."'  ";
+	                 WHERE user_email = '".strtolower( trim($_POST["input-userEmail"])  )."'   
+	                 AND  user_password = '".trim($_POST["input-userPassword"])."'  ";
 					 $userId = "logado";
 	}else{
 		
 		//print "->>>existe".$_POST["userEmail"]." <<- ";
 		$sql = "SELECT * FROM user 
 	                 WHERE user_id = ".$userId."  ";
+
+			
 	}
 	
 	
@@ -371,14 +383,16 @@ function areaUser( $userId ){
 	// 
 				  
 	$query = $mysqli->query($sql);
-	$numRows =  $query->num_rows;//número de linhas
+	$numRowsUsers =  $query->num_rows;//número de linhas
 	//print "->".$_POST["userEmail"]." - ".$_POST["userPassword"]."numRows = ".$numRows ."";
 	while (    $dados = $query->fetch_assoc()  ) {
 				  //print "usuario encontrado '".$dados["user_name"]."";
 				 if($userId == "logado"){
 				     $_SESSION['user_id'] = $dados["user_id"] ;//só atribui se ele logar pela primeira vez
 					 $userId = $_SESSION['user_id'];
-				 }  
+				 }else{
+					
+				 } 
 				   ?>
                   <div class='box-geral-profile'>
                         
@@ -492,12 +506,15 @@ function areaUser( $userId ){
 	 }
 
      //CONTRUINDO LEYOU DA TELA DE LOGIN DO USUÁRIO
-	 if($numRows >= 1){//SE ENCONTRAR ALGUMA LINHA
+	 if($numRowsUsers >= 1){//SE ENCONTRAR ALGUMA LINHA
         
 		//print "Usuario ID: ".$_SESSION['user_id'];
 
 	 }else{
-		//print "USUÁRIO OU SENHA NÃO ENCONTRADOS";
+		print "<center>
+		          Ususário ou senha não encontrados<br>
+				  volte e tente novamente!
+			   </center>";
 	 }
       ?>
 		<script>
@@ -1255,7 +1272,7 @@ function jsPostMessage(){
 					
 
 					let message = this.id.split("-");//separando [id]
-					alert(message[1].trim());
+					//alert(message[1].trim());
 					let getBoxMgs =  document.getElementById("msg-"+message[1].trim());
 					let userDestinacao = document.getElementById("userdestinacao-"+message[1].trim());//para quem a menssagem é enviada
 					//alert("->"+userDestinacao.value);
@@ -1945,7 +1962,9 @@ function topMenu(){
 							
 
 							<a href="main.php?page=feeds">	
-							<div class="top-menu-itens"><img src="../images/layout/logo-meet-icon-01.jpg"></div> 
+								<div class="top-menu-itens">
+								   <img src="../images/layout/svg/fotook-logo-name-01.svg" width="80">
+								</div> 
 							</a>   
 
                             <div class="top-info-updateFeeds" id="top-info-updateFeeds">
