@@ -28,7 +28,7 @@ body{
 		width: 100%;
 		max-width: 500px;/*Redimenciona ate, no máximo 500px de largura*/
 		height: 100%;
-		border: 1px solid #E7E7E7;
+		border: 0px solid #E7E7E7;
 		
 		padding-top: 80px;/*Necessário devido os menus top e foot para não cortar os conteúdos*/
 		padding-bottom: 50px;
@@ -808,12 +808,12 @@ body{
 .box-login-main{
 		
 	position: relative;
-	top: -80px;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: 100%;
+	
 	width: 92%;
 	font-size: 18px;
 	border: 0px solid #61abf0;
@@ -821,10 +821,9 @@ body{
 }
 
 .box-about-autor{
-	position: absolute;
-	padding: 8px;
-	right: 0px;
-	top: -10px;
+	position: relative;
+	padding: 0px;
+	
 	font-family: sans-serif;
 }
 
@@ -841,7 +840,9 @@ body{
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	width: 100%;
+	width: 100px;
+	border: 0px solid #5c5c5b;
+
 }
 
 

@@ -279,12 +279,14 @@ function windowLoginUser(){
 
 	<div class='box-login-main'>
 	        <div class="box-login-top"> 
-				<img src="../images/layout/svg/fotook-logo-name-01.svg" width="100"><br>
+			
+			    <img src="../images/layout/svg/fotook-logo-machine-02.svg" width='70' ><br>
+				<img src="../images/layout/svg/fotook-logo-name-01.svg" width='70' ><br>
 			</div>
 			
 			<div class="box-login-center">
                 <a href="main.php?page=aboutauthor">
-				     <div class="box-about-autor">sobre o autor</div>
+				     
                 </a>
 				<form action="main.php?page=userLogin" id="form-login-user" method="POST">
 					 <div class="box-info-top-login">Efetuar Login</div>
@@ -312,7 +314,9 @@ function windowLoginUser(){
 				Cadastre-se!
 				<br><br>
 				Fundador:  ® Jonathon Roges, Ago 2023.
-             </div>	
+				
+             </div>
+			 <div class="box-about-autor">sobre o autor</div>	
 	</div>
 
            
@@ -395,7 +399,7 @@ function areaUser( $userId ){
 				     $_SESSION['user_id'] = $dados["user_id"] ;//só atribui se ele logar pela primeira vez
 					 $userId = $_SESSION['user_id'];
 				 }else{
-					
+					$_SESSION['user_id'] = 0;
 				 } 
 				   ?>
                   <div class='box-geral-profile'>
@@ -1062,7 +1066,7 @@ function feeds(){
 						<a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
 						
 						<?php
-						if(file_exists("../images/users/".$dados["user_new_post_image"])){
+						if(file_exists("../images/users/media_".$dados["user_new_post_image"])){
 						?>
 							
 							<div class="box-image-user-post-item">
@@ -1969,7 +1973,7 @@ function aboutAuthor(){
        </p>
 		<p>
 		Conhecimento avançado de linguagens de programação (Java, PHP, SQL, C, Java Script),
-		bem como de formatação e estruturalção (HTML, CSS).
+		bem como de formatação e estruturação (HTML, CSS).
        </p>
 	   <p>
 		Conhecimento em segurança da informação, protocolo HTTP, TCP-IP, SSL, WebSockets, redes de computadores
@@ -2038,7 +2042,7 @@ function topMenu(){
 
 							<a href="main.php?page=feeds">	
 								<div class="top-menu-itens">
-								   <img src="../images/layout/svg/fotook-logo-name-01.svg" width="80">
+								   <img src="../images/layout/svg/fotook-logo-machine-02.svg" width="50">
 								</div> 
 							</a>   
 

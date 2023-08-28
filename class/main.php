@@ -30,8 +30,8 @@ if(!isset($_SESSION['user_id']))
 		 <div class="main">
 			
 			 <?php
-			 
-			    if(isset($_GET["page"])){
+			
+			    if(isset($_GET["page"])){//Pecisa estar logado para acessar as páginas
 					
 					
 
@@ -257,17 +257,7 @@ if(!isset($_SESSION['user_id']))
 								
 							}
 							
-							
-							
-							
-							
-
-
-							
-							
-
-							
-								if (isset($_SESSION) && isset($_SESSION['user_id']) ){ //necessário inicializar sessão sempre que uma página nova é criada
+							          if (isset($_SESSION) && isset($_SESSION['user_id']) ){ //necessário inicializar sessão sempre que uma página nova é criada
 											
 											topMenu();//desenha o topo    
 											footMenu();//Desenha o footMenu	

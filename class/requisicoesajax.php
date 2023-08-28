@@ -136,8 +136,19 @@
             ?>
                 <a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">
                         <div class="box-resul-searc-list">
-                            <img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed">
-                            <span class="searc-title-user-name">
+                        <?php
+                        if( file_exists("../images/users/pequena_".$dados["user_photo_perfil"]) ){
+                        ?>  
+                            <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>"> 
+                            <?php 
+                            }else{
+                     print "<img src='../images/users/avatar-003.png' width='50'> "; 
+                            } ?>   
+                        
+                        
+                        
+                        
+                        <span class="searc-title-user-name">
                             <?php 
                                 print $dados["user_tagname"]."
                                       
