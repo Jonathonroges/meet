@@ -20,13 +20,14 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 	 $senha = '';//sem senha - senha padrão do PhpMyAdmin
 	 $banco = 'meet';
 
-	 /*
+	 
 	 //EM PRODUCAO -  000Webhost
+	 /*
 	 $servidor = 'localhost';
 	 $usuario = 'id19182302_apoloone';
 	 $senha = 'Jr.19892008';//sem senha - senha padrão do PhpMyAdmin
-	 $banco = 'id19182302_apoloonedb';*/
-
+	 $banco = 'id19182302_apoloonedb';
+    */
  
 	
 	// Conecta-se ao banco de dados MySQL
@@ -282,6 +283,9 @@ function windowLoginUser(){
 			</div>
 			
 			<div class="box-login-center">
+                <a href="main.php?page=aboutauthor">
+				     <div class="box-about-autor">sobre o autor</div>
+                </a>
 				<form action="main.php?page=userLogin" id="form-login-user" method="POST">
 					 <div class="box-info-top-login">Efetuar Login</div>
 					<span style='color: #ee0000;' id="result-form"></span><br>
@@ -487,12 +491,18 @@ function areaUser( $userId ){
 							    <a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>">
 								    
 								<?php
-								   if(file_exists("../images/users/media_".$dados["user_new_post_image"])){
-								?>
+								    
+								   if(file_exists("../images/users/".$dados["user_new_post_image"])){
+								    
+								 ?>
 								      <div style="background-image: url('../images/users/media_<?php print $dados["user_new_post_image"] ;?>');" class="box-iten-post" >
 								      </div><!--fim div box-iten-post -->
 								<?php
-								   }//fim do if file_exists 
+								   }else{
+									  
+								 	print "Não encontrada<br>";
+								    
+								  }//fim do if file_exists 
 								?>	 
 							             
 							        
@@ -520,7 +530,7 @@ function areaUser( $userId ){
 		<script>
          //distribuindo itens (fotos com largura proporcionalmente)
 		 
-	
+	    
 		 let getWidthContainer = document.getElementById("box-post-list");
 		 let get_w;
 
@@ -534,6 +544,7 @@ function areaUser( $userId ){
 		
         function resizeImages(){//redimencionando imagens para assumirem largura da view
 			var w =   window.getComputedStyle(getWidthContainer).width;
+			//alert(w+"<--");
                 var list = document.querySelectorAll(".box-iten-post");
                 var  subdivide;//para saber em quanto devo dividir as iamgens na tela
 				if(list.length<=1){
@@ -547,7 +558,7 @@ function areaUser( $userId ){
 
 			        for(var i=0; i < list.length; i++){
 						let limpaNumero = w.substring(0,w.length-2);
-						list[i].style.width = ''+((limpaNumero)/subdivide).toFixed(2)+'';
+						list[i].style.width = ''+(((limpaNumero)/subdivide)-2).toFixed(2)+'';//[-2pixel] para encaixar direitinho na view
 						list[i].style.height = ''+((limpaNumero)/subdivide).toFixed(2)+'';
 					}
 		}
@@ -555,7 +566,7 @@ function areaUser( $userId ){
 
 
 
-
+      
 
 
 
@@ -699,7 +710,11 @@ function alterUser(){
 		</form>
 		   </div><!--container-user -->
 	  </div>	<!--box-cad-user -->
-	 
+	  <br>
+	  <br>
+	  <br>
+	  <p>
+	  <div style="display: block;padding-top: 50px;"></div>
 	 <!-- Ações javaScript-->
 	  
 	  <script type="text/javascript">
@@ -1023,21 +1038,41 @@ function feeds(){
          
          
 	    <div class="feed-box-user-post-item">
-
+                        
+		                <div class="box-top-post-user-profile">
+							<a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">
+								<div  class="user-image-profile-feed"> 
+								<?php
+									if( file_exists("../images/users/pequena_".$dados["user_photo_perfil"]) ){
+									?>  
+								     <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>"> 
+							        <?php 
+							       }else{
+                             print "<img src='../images/users/avatar-003.png' width='50'> "; 
+							         } ?>
+									</div>
+								<div class="user-name-profile-feed">
+								     <?php print $dados["user_tagname"] ;?>
+			                    </div>
+							</a>
+						</div><!--fecha div box-top-user-profile -->
 		
 
 		   
 						<a href="main.php?page=openuserpost&user_id=<?php print $dados["user_new_post_user_id"];?>&post_id=<?php print $dados["user_new_post_id"];?>"><!--Abrindo o post -->
 						
 						<?php
-						if(file_exists("../images/users/media_".$dados["user_new_post_image"])){
+						if(file_exists("../images/users/".$dados["user_new_post_image"])){
 						?>
 							
 							<div class="box-image-user-post-item">
-								<image src="../images/users/<?php print $dados["user_new_post_image"];?>">
+								<image src="../images/users/<?php print $dados["user_new_post_image"];?>" class="img-user-post" >
 							</div>
 						
 						<?php
+						}else{
+                           
+
 						}//fim defile_exists 
 						?>
 					
@@ -1046,15 +1081,9 @@ function feeds(){
 					<div class="box-info-user-post">
 						
 							<div class="profile-info-left"> 
-										<a href="main.php?page=userLogin&userid=<?php print $dados["user_id"]; ?>">
-											<div> 
-											<img src="../images/users/media_<?php print $dados["user_photo_perfil"] ;?>" class="user-image-profile-feed"> 
-											</div>
-										</a>		
+												
 										
-											<div class="box-info-text-left-profile">
-												<?php print $dados["user_tagname"] ;?>
-											</div>
+											
 										<!--like icon -->
 
 										<?php
@@ -1145,8 +1174,17 @@ function feeds(){
 
 						<div class="box-feeds-comentarios">
 								<div class="box-input-text-comentario">
-									<img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
-									<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
+									
+								<?php
+									if( file_exists("../images/users/pequena_".$dados["user_photo_perfil"]) ){
+									?>  
+								     <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>"> 
+							        <?php 
+							       }else{
+                             print "<img src='../images/users/avatar-003.png' width='50'> "; 
+							         } ?>
+									
+								    <input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
 									<input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
 									<input type="hidden" id="tempemgsid-<?php print $dados["user_new_post_id"];?>" value="<?php print rand();?>" >
 									<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
@@ -1913,6 +1951,43 @@ function verificarNotifications($user_id){
             
 }
 
+function aboutAuthor(){
+	?>
+    
+	<div class="box-aboutAuthor-main">
+		<div class="box-aboutAuthor-img">
+			<img  src=" ../images/layout/myPhotoProfileProgrammer.jpg" width="80" >
+		</div>
+		
+		<h3>Jonathon Roges</h3>
+		Analista e desenvolvedor de sistemas
+		Feira de Santana - BA<br>
+		jhonny.roges@gmail.com<br>
+		(75)9 9119-5121<br>
+		<p>
+		Curso: Bacharelado em Sistemas de Informação pela Universidade Federal Rural de Pernambuco - UFRPE.
+       </p>
+		<p>
+		Conhecimento avançado de linguagens de programação (Java, PHP, SQL, C, Java Script),
+		bem como de formatação e estruturalção (HTML, CSS).
+       </p>
+	   <p>
+		Conhecimento em segurança da informação, protocolo HTTP, TCP-IP, SSL, WebSockets, redes de computadores
+		Internet e Intranet, APache. Atuando também com softwares, hardwares e periféricos.
+       </p>
+	   <p>
+        Idiomas: Português e Ingles instrumental.
+       </p>
+	   <p>
+        Design UX, desenvolvedor FullStack (Back/FrontEnd)<br>
+		Ferramentas: IDES ( Visual Studio Code, NeatBeans, Dev C++, Android Studio, Dreamweaver, XCode ),
+		Photoshop, Premiere, After Effects, FileZilla, Blender.
+       </p>
+    </div>
+
+	<?php
+}
+
 
 function topMenu(){
 	?>
@@ -1937,7 +2012,7 @@ function topMenu(){
 								<a href="main.php?page=userLogin">
 									
 								<?php
-									if(file_exists("../images/users/".$dados["user_photo_perfil"])){
+									if(file_exists("../images/users/pequena_".$dados["user_photo_perfil"])){
 									?>
 										<div class="user-image-profile">
 											
@@ -1952,7 +2027,7 @@ function topMenu(){
 									}else{
 										?>
 									<div class="user-image-profile">
-										<img src="../images/users/305639912.png" class="user-image-profile-top"> 
+										<img src="../images/users/avatar-003.png" class="user-image-profile-top"> 
 									</div>
 									<?php
 

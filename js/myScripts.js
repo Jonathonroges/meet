@@ -52,7 +52,7 @@ function uploadsFile(){
 					//alert(">>>>"+response+" <<<<<");
 					$(".files").html("<div class='post-box-arq'>"+
 					"<br>"+
-					"<img src='../images/users/"+file+"' id='img-arquivo'> <br>"+
+					"<img src='../images/users/media_"+file+"' id='img-arquivo' class='img-arquivo'> <br>"+
 					"<input type='hidden' id='arquivo' name='arquivo' value='"+file+"'></div>  ").addClass('success');
 
 					

@@ -9,12 +9,23 @@ body{
 
 /*Para telas que tenham até no maximo 601px, vai de 0px até 601 */
 /*@media only screen and (max-width:601px){*/
+	
+	.box-main-center{
+		display: flex;
+		width: 100%;
+		flex-direction: row;
+		justify-content: center;
+		
+	}
+	
 	.main{
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 		background-color: #FFFFFF;
-		/*width: 100%;*/
+		width: 100%;
 		max-width: 500px;/*Redimenciona ate, no máximo 500px de largura*/
 		height: 100%;
 		border: 1px solid #E7E7E7;
@@ -335,25 +346,25 @@ body{
 	/*Estilizando lista de postagens do usuario - tela profile*/
 	.box-post-list{
 		position: relative;
+
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: flex-start;
 		flex-wrap: wrap;
 		border: 0px solid #f54974;
-		
+		width: 100%!important;
 		
 	}
 	.box-iten-post{
 		position: relative;
 		height: 120px;
-		
 		border: 0px solid #61abf0;
 		background-color: #ffffff;
 		background-position: center;
 		background-size: 199%;
 		background-repeat: no-repeat;
-		
+		border: 0px solid #5c5c5b;
 		
 	}
 
@@ -394,13 +405,16 @@ body{
 
 	.box-image-user-post-item img{
 		width: 100%;
-		max-width: 500px;
 		background-repeat: no-repeat;
+		
+	}
+	.img-user-post{
+		background-color: 1px solid #080808;
 	}
     .user-image-profile-top{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
-		width: 70px;
+		width: 50px;
 		
 	}
 
@@ -411,6 +425,14 @@ body{
 		width: 80px;
 
 		
+	}
+	.user-name-profile-feed{
+		display: flex;
+		width: auto;
+		border: 0px solid coral;
+		font-weight: bold;
+		color: #000000;
+
 	}
 
 	.container-img-user{
@@ -491,9 +513,30 @@ body{
 	    
 	    display: flex;
 		flex-direction: column;
-		background-color: #E7E7E7;
+		width: 100%;
+		background-color:1px solid #E7E7E7;
 		padding-bottom: 18px;
    }
+   .box-top-post-user-profile a{
+	display: flex;
+	border: 0px solid rgb(6, 94, 121);
+	justify-content: flex-start;
+	align-items: center;
+	text-decoration: none;
+	gap: 6px;
+
+   }
+
+   .box-top-post-user-profile{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	border: 0px solid coral;
+   }
+   
+
+
    #files{
 	display: block;
 	overflow: hidden;
@@ -503,7 +546,7 @@ body{
   #img-arquivo{
 	display: block;
 	overflow: hidden;
-	width: 50%;
+	
 	
    }
   .box-user-post-settings{
@@ -653,26 +696,29 @@ body{
 /*Teste Cortar imagem*/
 
 .box-geral-img{
-	display: flex;
 	position: relative;
-	width: 90%;
+	overflow: hidden;
+	display: block;
+	position: relative;
+	width: 300px;
 	height: 300px;
 	border: 1px dotted #f54974;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 100%;
+	background-color: #E7E7E7;
+	margin-top: 0px;
 }
 
-.select-area-image{
+.select-area-image-top{
+	position: absolute;
+	overflow: hidden;
 	display: flex;
 	flex-direction: row;
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	width: 100px;
-	height: 100px;
-	border: 2px solid #ffffff;
-	background-color: transparent;
+	width: 250px;
+	height: 250px;
+	border: 2px dotted #ffffff;
+	
 
 }
 
@@ -768,21 +814,29 @@ body{
 	justify-content: center;
 	align-items: center;
 	height: 100%;
-	width: 100%;
+	width: 92%;
 	font-size: 18px;
 	border: 0px solid #61abf0;
 	padding: 8px;
 }
 
+.box-about-autor{
+	position: absolute;
+	padding: 8px;
+	right: 0px;
+	top: -10px;
+	font-family: sans-serif;
+}
+
 .box-login-center{
+	position:relative;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	width: 100%;
+	border: 0px solid #5c5c5b;
 }
-.box-login-main div{
-	border: 0px solid #f6fa00;
-}
+
 .box-login-top{
 	display: flex;
 	flex-direction: row;
@@ -888,7 +942,7 @@ body{
 	width: 80%;
 	justify-content: start;
 	align-content: flex-start;
-	border: 1px solid #121312;
+	border: 0px solid #121312;
 	font-size: 14px;
 	font-family: sans-serif;
 	padding: 50px;
@@ -899,6 +953,24 @@ body{
 #form-login-user{
 	
 	border: 0px solid #95f061;
+}
+
+/*Estilizando a pagina aboutAuthor*/
+.box-aboutAuthor-main{
+	
+	position: relative;
+	
+	border: 0px solid #5c5c5b;
+	padding: 25px;
+	font-family: sans-serif;
+	font-size: 13px;
+}
+.box-aboutAuthor-img{
+	position: relative;
+	display: block;
+	float: left;
+	margin-right: 8px;
+	
 }
 
 

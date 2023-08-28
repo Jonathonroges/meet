@@ -256,10 +256,11 @@
        // The file
            print "scr = ".$_GET["src"]."<br>
                   left = ".$_GET["left"]."<br>
-                  top = ".$_GET["top"]."     
+                  top = ".$_GET["top"]."  
+                  fatorZoom = ".$_GET["zoom"]."    
            ";
             
-            $filename = $_GET["src"];
+            $filename = "../images/users/media_".$_GET["src"];
             $percent = 0.5;
             
 
@@ -275,27 +276,55 @@
 
            // print "->W :".$larguraOriginal." -> ".$alturaOriginal." <br>";
 
-            $newwidth = 300;//crio uma imagem quadrada
-            $newheight = 300;//crio uma imagem quadrada
+            $newwidth = 600;//crio uma imagem quadrada
+            $newheight = 600;//crio uma imagem quadrada
+
+
+           //MEUS CALCULOS
+           $y_origem =  (int)$_GET["top"];
+           $x_origem =  (int)$_GET["left"];
+           $zoom_origem =  (int)$_GET["zoom"];
+           $imgZoomFactor =  (int)$_GET["zoom"];
+           $neWidth = (int)$_GET["newidth"];
+           $newHeight = (int)$_GET["newheight"];
+
+           
+          if($imgZoomFactor <=0)
+             $imgZoomFactor = 0;//não deixa o zoom ser negativo e a imagem escapar da tela
+          
+          
+             // $x_result =  300;
+           //$y_result =  ($larguraOriginal  * $alturaOriginal)/300;
+          
+
+
 
             // Resample
-            $image_p = imagecreatetruecolor($newwidth, $newheight);
+            $image_p = imagecreatetruecolor(200  , 200);
             
             $image = imagecreatefromjpeg($filename);
+           
+         
+
+
             $imageName = "../images/users/croppers/".time().'.jpg';  //diretorio a ser gravado     
+           
             imagecopyresampled($image_p,//imagem criada para adicionar a imagem destino
                             $image,//imagem origem a que é carregada
                             0,//posição x da imagem destino 
                             0,//distancia y do topo a ser desenhada a imagem origem em relação a imagem destino criada 
-                            0,//afasta a imagem destino em direcao a esquerda da imagem criada para acopla-la
-                            0,//afasta a imagem destino em direcao ao topo da imagem criada para acopla-la
-                            300,//nova largura tamanho da imagem criada - (achatamento)destino, createfrom dentro da imagecreatetruecolor
-                            400,//nova altura tamanho da imagem criada - destino, createfrom dentro da imagecreatetruecolor
-                            200,//zoom a partis da orimgem(x=0) widht, quanto menor, maior o zoom, considerando sempre as dimensoes originais
-                            300);//zoom a partir da origem (y=0) heiht, quanto menor, maior o zoom,considerando sempre as dimensoes originais
+                            $x_origem,//afasta a imagem destino em direcao a esquerda da imagem criada para acopla-la
+                            $y_origem,//afasta a imagem destino em direcao ao topo da imagem criada para acopla-la
+                            $neWidth,//nova largura tamanho da imagem criada - (achatamento)destino, createfrom dentro da imagecreatetruecolor
+                            $neWidth,//nova altura tamanho da imagem criada - destino, createfrom dentro da imagecreatetruecolor
+                            300  ,//zoom a partis da orimgem(x=0) widht, quanto menor, maior o zoom, considerando sempre as dimensoes originais
+                            300 
+                             );//zoom a partir da origem (y=0) heiht, quanto menor, maior o zoom,considerando sempre as dimensoes originais
 
             // Output
             
+
+            print "X:".$x_origem.", Y:".$y_origem.", zoom:".$zoom_origem.", src_w:".$neWidth.", src_h:".$newHeight;
             imagejpeg($image_p, $imageName, 90);
            
 

@@ -26,6 +26,7 @@ if(!isset($_SESSION['user_id']))
 		  <title>meet</title>
 	 </head>
 	 <body>
+	    <div class="box-main-center">	
 		 <div class="main">
 			
 			 <?php
@@ -250,6 +251,10 @@ if(!isset($_SESSION['user_id']))
 								
 								notification();
 								
+							}if($_GET["page"] =="aboutauthor"){
+								
+								aboutAuthor();
+								
 							}
 							
 							
@@ -278,8 +283,8 @@ if(!isset($_SESSION['user_id']))
                 
 			 ?>
 			
-		 </div>
-
+		 </div><!-- fecha div main -->
+		</div><!-- fecha box-main-center--> 
 
 
           <script>
