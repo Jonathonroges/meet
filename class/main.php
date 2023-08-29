@@ -30,12 +30,17 @@ if(!isset($_SESSION['user_id']))
 		 <div class="main">
 			
 			 <?php
-			
+			    
+                
+
 			    if(isset($_GET["page"])){//Pecisa estar logado para acessar as páginas
 					
-					
+					     
 
 							if($_GET["page"] == "cadUser"){
+
+								if($_POST['arquivo']=="")
+								$_POST['arquivo']=" ";
 								
 									$sql = "INSERT INTO user (       
 									user_name    ,

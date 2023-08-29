@@ -22,12 +22,13 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 
 	 
 	 //EM PRODUCAO -  000Webhost
+	 
 	 /*
 	 $servidor = 'localhost';
 	 $usuario = 'id19182302_apoloone';
 	 $senha = 'Jr.19892008';//sem senha - senha padrão do PhpMyAdmin
-	 $banco = 'id19182302_apoloonedb';
-    */
+	 $banco = 'id19182302_apoloonedb';*/
+    
  
 	
 	// Conecta-se ao banco de dados MySQL
@@ -285,9 +286,7 @@ function windowLoginUser(){
 			</div>
 			
 			<div class="box-login-center">
-                <a href="main.php?page=aboutauthor">
-				     
-                </a>
+               
 				<form action="main.php?page=userLogin" id="form-login-user" method="POST">
 					 <div class="box-info-top-login">Efetuar Login</div>
 					<span style='color: #ee0000;' id="result-form"></span><br>
@@ -316,7 +315,9 @@ function windowLoginUser(){
 				Fundador:  ® Jonathon Roges, Ago 2023.
 				
              </div>
-			 <div class="box-about-autor">sobre o autor</div>	
+			 <a href="main.php?page=aboutauthor">
+			    <div class="box-about-autor">sobre o autor</div>
+            </a>	
 	</div>
 
            
@@ -399,7 +400,7 @@ function areaUser( $userId ){
 				     $_SESSION['user_id'] = $dados["user_id"] ;//só atribui se ele logar pela primeira vez
 					 $userId = $_SESSION['user_id'];
 				 }else{
-					$_SESSION['user_id'] = 0;
+					
 				 } 
 				   ?>
                   <div class='box-geral-profile'>
@@ -453,7 +454,18 @@ function areaUser( $userId ){
 
                         
 
-						}//fecha if file_exists
+						}else{
+                              
+							?>
+							<div class="box-moldura-profile" >
+						        <img src="../images/users/avatar-003.png" class="user-image-profile"> 
+								
+						    </div>
+							<?php
+                        }//fecha if file_exists
+
+                           
+
 						?>
 
 
@@ -948,7 +960,17 @@ function openUserPost($user_id, $post_id){
 
 			<div class="box-feeds-comentarios">
 				<div class="box-input-text-comentario">
-				    <img src="../images/users/media_<?php print $dados1["user_photo_perfil"] ;?>" class="user-image-profile-feed-message" > 
+				    
+
+				<?php
+				if( file_exists("../images/users/pequena_".$dados1["user_photo_perfil"]) ){
+				?>  
+					<img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>"> 
+				<?php 
+				}else{
+			print "<img src='../images/users/avatar-003.png' width='30'> "; 
+					} ?>
+
 					<input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >
 				    <input type="hidden" id="userdestinacao-<?php print $dados["user_new_post_id"];?>" value="<?php print $dados["user_id"];?>">
 					<a href="#" id="publicar-<?php print $dados["user_new_post_id"];?>" class="bt-feed-publicar"> publicar</a>
@@ -1049,16 +1071,19 @@ function feeds(){
 								<?php
 									if( file_exists("../images/users/pequena_".$dados["user_photo_perfil"]) ){
 									?>  
-								     <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>"> 
+								     <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>" width='38'> 
+									
 							        <?php 
 							       }else{
-                             print "<img src='../images/users/avatar-003.png' width='50'> "; 
+                             print "<img src='../images/users/avatar-003.png' width='38'> "; 
 							         } ?>
-									</div>
-								<div class="user-name-profile-feed">
+                                </div>
+								<div class="box-round-moldura"></div> 
+								
+							</a>
+							<div class="user-name-profile-feed">
 								     <?php print $dados["user_tagname"] ;?>
 			                    </div>
-							</a>
 						</div><!--fecha div box-top-user-profile -->
 		
 
@@ -1180,12 +1205,12 @@ function feeds(){
 								<div class="box-input-text-comentario">
 									
 								<?php
-									if( file_exists("../images/users/pequena_".$dados["user_photo_perfil"]) ){
+									if( file_exists("../images/users/pequena_".$dados1["user_photo_perfil"]) ){
 									?>  
-								     <img src="../images/users/pequena_<?php print $dados["user_photo_perfil"] ;?>"> 
+								     <img src="../images/users/pequena_<?php print $dados1["user_photo_perfil"] ;?>"> 
 							        <?php 
 							       }else{
-                             print "<img src='../images/users/avatar-003.png' width='50'> "; 
+                             print "<img src='../images/users/avatar-003.png' width='30'> "; 
 							         } ?>
 									
 								    <input type="text" value="" name="input-feed-message" id="input-message-<?php print $dados["user_new_post_id"];?>" placeholder="comentar" >

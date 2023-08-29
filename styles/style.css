@@ -57,7 +57,7 @@ body{
 	display: flex;
 	/*border: 1px solid #E7E7E7;*/
 	gap: 20px;
-	padding-right: 50px;
+	padding-right: 8px;
    }
    .rigth-top-menu-itens a{
 	text-decoration: none;
@@ -449,6 +449,7 @@ body{
 		background-repeat: no-repeat;
 		background-position: 1px 1px;
 		width: 50px;
+		padding-left: 8px;
 		
 	}
 	/*icone pequeno para post de mensagens(comentarios)*/
@@ -514,25 +515,39 @@ body{
 	    display: flex;
 		flex-direction: column;
 		width: 100%;
-		background-color:1px solid #E7E7E7;
+		background-color:1px solid #ffffff;
 		padding-bottom: 18px;
    }
    .box-top-post-user-profile a{
+	position: relative;
 	display: flex;
 	border: 0px solid rgb(6, 94, 121);
+	
 	justify-content: flex-start;
 	align-items: center;
 	text-decoration: none;
-	gap: 6px;
+	gap: 12px;
+	height: 41px;
+	width: 54px;
+	overflow: hidden;
 
    }
 
    .box-top-post-user-profile{
+	position: relative;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
 	border: 0px solid coral;
+   }
+   .box-round-moldura{
+	position: absolute;
+	background-image: url("../images/layout/moldure-profile-pequena-01.png");
+	background-repeat: no-repeat;
+	left: 8px;
+	width: 42px;
+	height: 42px;
    }
    
 
