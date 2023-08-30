@@ -398,6 +398,7 @@ function areaUser( $userId ){
 				  //print "usuario encontrado '".$dados["user_name"]."";
 				 if($userId == "logado"){
 				     $_SESSION['user_id'] = $dados["user_id"] ;//só atribui se ele logar pela primeira vez
+					 $_SESSION['login'] = true;//determina que fex o login 
 					 $userId = $_SESSION['user_id'];
 				 }else{
 					
@@ -433,7 +434,10 @@ function areaUser( $userId ){
 								
 										$dist = (6371 * acos(cos($lat1) * cos($lat2) * cos($lon2 - $lon1) + sin($lat1) * sin($lat2)));
 										print "
-										<br><b>
+										<br><b>";
+										
+										if($_SESSION['user_id'] != $dados["user_id"] )
+										print "
 										<img src='../images/layout/svg/location-2-icon-inactive.svg' width='15'>
 										Está a ".(number_format($dist, 1, '.', ''))." Km</b>";//quilometros
 						    ?>
