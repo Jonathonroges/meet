@@ -44,7 +44,7 @@ if(!isset($_SESSION['user_id']))
 					} if($_GET["page"] =="aboutauthor"){
 								
 						aboutAuthor();
-						
+						exit();//execulta e para
 					}if($_GET["page"] == "cadUser"){
 
 						if($_POST['arquivo']=="")
@@ -118,7 +118,7 @@ if(!isset($_SESSION['user_id']))
 									else
 									areaUser( $userId );
 
-									exit();//execulta e para
+									
 					    } 
 
 							
@@ -260,7 +260,7 @@ if(!isset($_SESSION['user_id']))
 									
 									notification();
 									
-								} if (isset($_SESSION) && isset($_SESSION['login']) ){ //necessário inicializar sessão sempre que uma página nova é criada
+								}if(isset($_SESSION)  ){ //necessário inicializar sessão sempre que uma página nova é criada
 												
 									topMenu();//desenha o topo    
 									footMenu();//Desenha o footMenu	
@@ -275,6 +275,7 @@ if(!isset($_SESSION['user_id']))
 									window.location.href = "main.php?page=login";
 								</script>
 								<?php
+								exit();//execulta e para
 								// die();
 								
 
@@ -286,6 +287,7 @@ if(!isset($_SESSION['user_id']))
 									window.location.href = "main.php?page=login";
 								</script>
 								<?php
+								exit();//execulta e para
 
 				}
 			    
