@@ -23,11 +23,12 @@ function conectar(){//conecta ao BASE de dados e passa o objeto conexão
 	 
 	 //EM PRODUCAO -  000Webhost
 	 
-	 /*
+	 /**/ 
 	 $servidor = 'localhost';
 	 $usuario = 'id19182302_apoloone';
 	 $senha = 'Jr.19892008';//sem senha - senha padrão do PhpMyAdmin
-	 $banco = 'id19182302_apoloonedb';*/
+	 $banco = 'id19182302_apoloonedb';
+	 /**/
     
  
 	
